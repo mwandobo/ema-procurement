@@ -1,0 +1,372 @@
+@extends('layout.master')
+
+@push('plugin-styles')
+{!! Html::style('assets/css/loader.css') !!}
+{!! Html::style('plugins/apex/apexcharts.css') !!}
+{!! Html::style('assets/css/dashboard/dashboard_2.css') !!}
+{!! Html::style('plugins/flatpickr/flatpickr.css') !!}
+{!! Html::style('plugins/flatpickr/custom-flatpickr.css') !!}
+{!! Html::style('assets/css/elements/tooltip.css') !!}
+
+<style>
+
+  .details-menu > .form-inline > a {
+        font-weight:bold;
+        color:  #2196f3!important;
+    
+    }
+      
+   
+    </style>
+@endpush
+
+@section('content')
+<!--  Navbar Starts / Breadcrumb Area  -->
+
+<!--  Navbar Ends / Breadcrumb Area  -->
+<!-- Main Body Starts -->
+<div class="layout-px-spacing">
+    <div class="row layout-top-spacing">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+            <div class="widget top-welcome">
+                <div class="f-100">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="media">
+                                <div class="mr-3">
+                                    <img src="{{url('assets/img/member_pasport_size')}}/{{!empty($data->picture)? $data->picture : '' }}"
+                                        alt="" class="avatar-md rounded-circle img-thumbnail">
+                                </div>
+                                <div class="align-self-center col-lg-8">
+                                    <div class="text-muted">
+                                        <p class="mb-2 text-primary"> Welcome {{ auth()->user()->name }}, {{ auth()->user()->email }}</p>
+                                      
+                                      
+                                       
+                                 <p> <button class="btn btn-small btn-primary"
+                                                        data-toggle="modal" data-target="#appFormModal"
+                                                        data-id="{{ $data->id }}" data-type="edit"
+                                                        onclick="model({{ $data->id }},'show')" >
+                                                    Click here to update profile</button></p>
+                                                                       
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-4">
+                                    <div class="text-muted">
+                                                    
+                                         <p class="mb-2 text-success"> Current Member Balance  <a class="nav-link" href="{{ route('transaction_report') }}" >{{ number_format($data->balance,2) }}</a></p> 
+                                         
+                                    </div>
+                                </div>
+                       
+                            </div>
+                        </div>
+
+                      
+<!--
+<div class="col-lg-6">
+<div class="row mt-lg">
+                
+                <div class="col-sm-12">
+                 <h5 class="mb-1"> Member Details</h5>
+                                <div class="nav flex-column nav-pills mb-sm-0 mb-6 text-center mx-auto details-menu"
+                                role="tablist" aria-orientation="vertical">
+                             
+                              <div class="form-inline"> Personal Details<a class="nav-link" href="" >View</a> <a class="nav-link" href="" >Edit</a></div>
+                                <div class="form-inline"> Sport Details<a class="nav-link" href="" >View</a> <a class="nav-link" href="" >Edit</a></div>
+                               <div class="form-inline"> Other Details<a class="nav-link" href="" >View</a> <a class="nav-link" href="" >Edit</a></div>
+                                                                                        
+                              
+                            </div>
+                        </div>
+                 </div>
+</div>
+
+-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+                                   
+
+                             
+            
+
+        @if($data->status != 2)
+        <div class="offset-md-4">
+            <marquee>
+                <p class="mb-1 badge badge-danger"> Sorry!! only image upload functionality is enabled,other functionality will be unlocked very soon......</p>
+            </marquee>
+        </div>
+        @endif
+        <!-- 4 COLUMNS -->
+<!--
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+
+            <div class="row">
+                @if(!empty($invoices))
+                @foreach($invoices as $row)
+                <a href="#">
+                    <div class="col-lg-6">
+                        <div class="card border-left-3 border-left-danger rounded-left-0">
+                            <div class="card-body">
+                                <div class="d-sm-flex align-item-sm-center flex-sm-nowrap">
+                                    <div>
+                                        <h6 class="font-weight-semibold">
+                                            {{$row->fee_type == 1? "SUBSCRIPTION FEE":"DEVELOPMENT FEE"}}</h6>
+                                        <ul class="list list-unstyled mb-0">
+                                            <li>Invoice #: <a href="#">{{$row->reference_no}}</a></li>
+                                            <li>Issued on: <span class="font-weight-semibold">{{$row->date}}</span></li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="text-sm-right mb-0 mt-3 mt-sm-0 ml-auto">
+                                        <h6 class="font-weight-semibold">{{$row->due_amount}} Tsh</h6>
+                                        <ul class="list list-unstyled mb-0">
+                                            <li>Payment Method: <span class="font-weight-semibold">Bank</span></li>
+                                            <li>
+                                                Status: &nbsp;
+                                                @if($row->due_amount == $row->amount)
+                                                <a href="#" class="badge badge-danger align-top dropdown-toggle">Not
+                                                    Paid</a>
+                                                @else
+                                                <a href="#"
+                                                    class="badge badge-warning align-top dropdown-toggle">Partial
+                                                    Paid</a>
+                                                @endif
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-footer d-sm-flex justify-content-sm-between align-items-sm-center">
+                                <span>
+                                    <span class="badge badge-mark border-danger mr-2"></span>
+                                    Due:
+                                    <span class="font-weight-semibold">{{$row->due_date}}</span>
+                                </span>
+
+                                <ul class="list-inline list-inline-condensed mb-0 mt-2 mt-sm-0">
+                                    <li class="list-inline-item">
+                                        <a href="{{route('member_payments.show',$row->id)}}"
+                                            class="text-body badge badge-success"><i class="icon-eye8"></i>clickhere to
+                                            pay your invoice</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                @endforeach
+                @endif
+
+            </div>
+        </div> -->
+        <!-- 4 COLUMNS END-->
+<!--
+        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 layout-spacing">
+            <div class="row">
+                <div class="col-md-6 layout-spacing">
+                    <div class="widget widget-chart-one">
+                        <div class="widget-heading">
+                            <h5 class=""> {{ __('Sales details of product') }}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="d-flex justify-content-between">
+                                <p class="font-35 text-success-teal"> {{ __('$74,989') }}</p>
+                                <i class="lar la-chart-bar font-45 text-success-teal"></i>
+                            </div>
+                            <p> {{ __('Total 175 Sales') }}</p>
+                            <a class="btn btn-sm btn-primary"> {{ __('View Details') }}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 layout-spacing">
+                    <div class="widget widget-chart-one">
+                        <div class="widget-heading">
+                            <h5 class=""> {{ __('Pending payment of product') }}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="d-flex justify-content-between">
+                                <p class="font-35 text-warning"> {{ __('$24,989') }}</p>
+                                <i class="lar la-chart-bar font-45 text-warning"></i>
+                            </div>
+                            <p> {{ __('Total 98 clients') }}</p>
+                            <a class="btn btn-sm btn-warning"> {{ __('View Details') }}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="widget widget-chart-one">
+                        <div class="widget-heading">
+                            <h5 class=""> Recent Menu Items</h5>
+                            <ul class="tabs tab-pills">
+                                <li>
+                                    <div class="dropdown  custom-dropdown-icon">
+                                        <a class="dropdown-toggle" href="#" role="button" id="customDropdown"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>
+                                                {{ __('Options') }}</span> <i class="las la-angle-down"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="customDropdown">
+                                            <a class="dropdown-item" data-value="Print" href="javascript:void(0);">
+                                                {{ __('Print') }}</a>
+                                            <a class="dropdown-item" data-value="Download" href="javascript:void(0);">
+                                                {{ __('Download') }}</a>
+                                            <a class="dropdown-item" data-value="Share" href="javascript:void(0);">
+                                                {{ __('Share') }}</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="widget-content">
+                            <div class="d-flex flex-column">
+                                <div class="media recent-items w-100 align-items-center mt-2 mb-4">
+                                    <img src="{{asset('assets/img/product-11.jpg')}}" alt="">
+                                    <div class="media-body ml-4 mt-sm-3">
+                                        <h5 class="mb-1"> Wali Samaki</h5>
+                                        <p> 100,0000 Tsh</p>
+                                    </div>
+                                    <a class="badge badge-success-teal text-white mr-2"> add to cart</a>
+
+                                </div>
+                                <div class="media recent-items w-100 align-items-center mb-4">
+                                    <img src="{{asset('assets/img/product-21.jpg')}}" alt="">
+                                    <div class="media-body ml-4 mt-sm-3">
+                                        <h5 class="mb-1"> Ugali choma </h5>
+                                        <p> 20000 Tsh</p>
+                                    </div>
+                                    <a class="badge badge-success-teal text-white mr-2"> add to cart</a>
+
+                                </div>
+                                <div class="media recent-items w-100 align-items-center mb-4">
+                                    <img src="{{asset('assets/img/product-31.jpg')}}" alt="">
+                                    <div class="media-body ml-4 mt-sm-3">
+                                        <h5 class="mb-1"> Ugali choma </h5>
+                                        <p> 2000 tsh</p>
+                                    </div>
+                                    <a class="badge badge-success-teal text-white mr-2"> add to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 layout-spacing">
+            <div class="widget widget-chart-one">
+                <div class="widget-content">
+                    <div class="agent-info text-center">
+                        <div class="agent-img pb-3">
+                            <img src="{{asset('assets/img/profile-5.jpg')}}" class="img-thumbnail rounded-circle"
+                                alt="image">
+                        </div>
+                        <h5 class="text-dark"> {{__('Hermann P. Schnitzel')}}</h5>
+                        <p> {{ __('Agent of Property') }}</p>
+                        <h6 class="mb-3 mt-3"><span class="text-primary pr-2"><i class="fa fa-phone"></i></span>
+                            {{ __('(+1) 774-238-0096') }}</h6>
+                    </div>
+                    <form action="index.html" class="agent-req-form mt-2">
+                        <h6 class="text-muted text-center mb-4"> {{ __('Request Inquiry') }}</h6>
+                        <div class="form-group">
+                            <input type="text" placeholder=" {{ __('Full Name *') }}"
+                                class="form-control bg-white text-muted">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder=" {{ __('Email ID *') }}"
+                                class="form-control bg-white text-muted">
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" placeholder=" {{ __('Phone No *') }}"
+                                class="form-control bg-white text-muted">
+                        </div>
+                        <div class="form-group">
+                            <textarea rows="3" placeholder=" {{ __('Message *') }}"
+                                class="form-control bg-white text-muted"></textarea>
+                        </div>
+                        <div class="form-group text-right mb-0">
+                            <button type="submit" class="btn btn-sm btn-outline-primary">
+                                {{ __('Submit Request') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+            <div class="widget-chart-one">
+                <div class="widget-content overflow-hidden">
+                    <div class="ticker-wrap">
+                        <div class="ticker-heading bg-gradient-info">
+                            <p> {{ __('Overview') }}</p>
+                        </div>
+                        <div class="ticker">
+                            <div class="ticker-item"> {{ __('Letterpress chambray brunch.') }}</div>
+                            <div class="ticker-item">
+                                {{ __('Vice mlkshk crucifix beard chillwave meditation hoodie asymmetrical Helvetica.') }}
+                            </div>
+                            <div class="ticker-item"> {{ __('Ugh PBR&B kale chips Echo Park.') }}</div>
+                            <div class="ticker-item"> {{ __('Gluten-free mumblecore chambray mixtape food truck.') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+-->
+    </div>
+</div>
+
+<div id="appFormModal" class="modal fade" tabindex="-1"  data-backdrop="false" >
+        <div class="modal-dialog">
+
+              
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script>
+function model(id, type) {
+
+let url = '{{ route("image.update") }}';
+
+
+$.ajax({
+    type: 'GET',
+    url: url,
+    data: {
+        'type': type,
+        'id': id,
+    },
+    cache: false,
+    async: true,
+    success: function(data) {
+        //alert(data);
+        $('.modal-dialog').html(data);
+    },
+    error: function(error) {
+        $('#appFormModal').modal('toggle');
+
+    }
+});
+
+}
+</script>
+
+<script>
+    var loadBigFile=function(event){
+      var output=document.getElementById('big_output');
+      output.src=URL.createObjectURL(event.target.files[0]);
+    };
+  </script>
+
+{!! Html::script('assets/js/loader.js') !!}
+{!! Html::script('plugins/apex/apexcharts.min.js') !!}
+{!! Html::script('plugins/flatpickr/flatpickr.js') !!}
+{!! Html::script('assets/js/dashboard/dashboard_2.js') !!}
+@endsection
