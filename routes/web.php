@@ -27,8 +27,9 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'v2'], function () {
     Route::group(['middleware' => 'auth', 'prefix' => 'sales'], function () {
-        Route::resource('quotations', 'Sales\SaleQuotationController');
+        Route::resource('pre-quotations', 'Sales\SalePreQuotationController');
         Route::resource('quotation-price-approval', 'Sales\SalePriceQuotationController');
+        Route::resource('quotations', 'Sales\SaleQuotationController');
         Route::get('item', 'Sales\SaleQuotationController@findItem');
     });
 });

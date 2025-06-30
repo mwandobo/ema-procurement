@@ -69,7 +69,7 @@
                                                     <tr class="gradeA even" role="row">
                                                         <td>
                                                             <a class="nav-link" id="profile-tab2"
-                                                               href="{{ route('quotations.show',$row->id)}}" role="tab"
+                                                               href="{{ route('pre-quotations.show',$row->id)}}" role="tab"
                                                                aria-selected="false">{{$row->reference_no}}</a>
                                                         </td>
                                                         <td> {{$row->client->name}}</td>

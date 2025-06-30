@@ -250,12 +250,12 @@
                         <i class="icon-store"></i><span>Sales</span>
                     </a>
                     <ul class="nav nav-group-sub">
+                        <li class="nav-item"><a class="nav-link {{ (request()->is('v2/sales/pre-quotations*')) ? 'active' : ''  }}"
+                                                href="{{url('v2/sales/pre-quotations')}}">Sales Pre-Quotations</a></li>
+                        <li class="nav-item"><a class="nav-link {{ (request()->is('v2/sales/quotation-price-approval*')) ? 'active' : ''  }}"
+                                                href="{{url('v2/sales/quotation-price-approval')}}">Pre-Quotations Price Approval</a></li>
                         <li class="nav-item"><a class="nav-link {{ (request()->is('v2/sales/quotations*')) ? 'active' : ''  }}"
                                                 href="{{url('v2/sales/quotations')}}">Sales Quotations</a></li>
-
-                        <li class="nav-item"><a class="nav-link {{ (request()->is('v2/sales/quotation-price-approval*')) ? 'active' : ''  }}"
-                                                href="{{url('v2/sales/quotation-price-approval')}}">Quotations Price Approval</a></li>
-
                         <li class="nav-item"><a class="nav-link {{ (request()->is('pos/sales/profoma/invoice*')) ? 'active' : ''  }}"
                                 href="{{url('pos/sales/profoma/invoice')}}">Profoma Invoice</a></li>
 
@@ -266,7 +266,6 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('inventory/discounts*') ? 'active' : '' }}"
                                 href="{{ route('inventory.discounts.index') }}">
-
                                 Discounts
                             </a>
                         </li>
