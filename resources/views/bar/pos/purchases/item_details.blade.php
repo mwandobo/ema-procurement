@@ -13,7 +13,7 @@
         <div class="modal-body">
             <input type="hidden" id="purchase_supplier_invoice_id" name="purchase_supplier_invoice_id" class="form-control user"
                 value="<?php echo $id ?>">
-            
+
             <div class="form-group">
                 <label><strong>Receiving Status:</strong></label><br>
                 <div class="form-check form-check-inline">
@@ -25,8 +25,8 @@
                     <label class="form-check-label" for="partialReceived">Partial</label>
                 </div>
             </div>
-            
-    
+
+
             <div class="table-responsive">
                 <table class="table table-bordered" id="cart">
                     <thead>
@@ -71,9 +71,9 @@
 
                             <input type="hidden" name="invoice_item_id[]"
                                 class="form-control name_list"
-                                value="{{ isset($i) ? $i->id : ''}}" />       
+                                value="{{ isset($i) ? $i->id : ''}}" />
 
-                             
+
 
                             <td><button type="button" name="remove"
                                     class="btn btn-danger btn-xs remove"
