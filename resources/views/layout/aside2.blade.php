@@ -251,29 +251,22 @@
                     </a>
                     <ul class="nav nav-group-sub">
                         <li class="nav-item"><a class="nav-link {{ (request()->is('v2/sales/quotations*')) ? 'active' : ''  }}"
-                                                href="{{url('v2/sales/quotations')}}"><i></i></i>Sales Quotations</a></li>
+                                                href="{{url('v2/sales/quotations')}}">Sales Quotations</a></li>
+
+                        <li class="nav-item"><a class="nav-link {{ (request()->is('v2/sales/quotation-price-approval*')) ? 'active' : ''  }}"
+                                                href="{{url('v2/sales/quotation-price-approval')}}">Quotations Price Approval</a></li>
 
                         <li class="nav-item"><a class="nav-link {{ (request()->is('pos/sales/profoma/invoice*')) ? 'active' : ''  }}"
-                                href="{{url('pos/sales/profoma/invoice')}}"><i></i></i>Profoma Invoice</a></li>
-
-                        {{-- <li class="nav-item"><a class="nav-link {{ (request()->is('bar/sales/bar_invoice/bar_profoma_invoice*')) ? 'active' : ''  }}"
-                                href="{{url('bar/sales/bar_profoma_invoice')}}"><i></i></i>Profoma Invoice 2</a></li> --}}
+                                href="{{url('pos/sales/profoma/invoice')}}">Profoma Invoice</a></li>
 
                         <li class="nav-item"><a class="nav-link {{ (request()->is('pos/sales/invoices*')) ? 'active' : ''  }}"
-                                href="{{url('pos/sales/invoices')}}"><i></i></i>Invoice</a></li>
-
-                        {{-- <li class="nav-item"><a class="nav-link {{ (request()->is('bar/sales/bar_invoice/bar_invoice*')) ? 'active' : ''  }}"
-                                href="{{url('bar/sales/bar_invoice')}}"><i></i></i>Invoice 2</a></li> --}}
-
+                                href="{{url('pos/sales/invoices')}}">Invoice</a></li>
                         <li class="nav-item"><a class="nav-link {{ (request()->is('bar/sales/bar_invoice/bar_invoice_payment*')) ? 'active' : ''  }}"
-                                href="{{url('bar/sales/bar_invoice_payment')}}"><i></i></i>Invoice Payment</a></li>
-
-
-
+                                href="{{url('bar/sales/bar_invoice_payment')}}">Invoice Payment</a></li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('inventory/discounts*') ? 'active' : '' }}"
                                 href="{{ route('inventory.discounts.index') }}">
-                                <i></i>
+
                                 Discounts
                             </a>
                         </li>
@@ -281,7 +274,7 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('bar/sales/credibility*') ? 'active' : '' }}"
                                 href="{{url('bar/sales/credibility')}}">
-                                <i></i>
+
                                 Customer Credibility
                             </a>
                         </li>

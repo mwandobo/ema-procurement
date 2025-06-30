@@ -96,9 +96,6 @@
                                                                        class="list-icons-item dropdown-toggle text-teal"
                                                                        data-toggle="dropdown"><i class="icon-cog6"></i></a>
                                                                     <div class="dropdown-menu">
-                                                                        <a class="btn btn-xs btn-info" id="profile-tab2" data-id="{{ $row->id  }}" data-type="approve"
-                                                                           onclick="model({{ $row->id  }},'costing')" href="" data-toggle="modal"
-                                                                           data-target="#appFormModal" role="tab" aria-selected="false">Approve</a>
                                                                         <a class="nav-link" id="profile-tab2"
                                                                            href="{{ route('purchase_pdfview',['download'=>'pdf','id'=>$row->id]) }}"
                                                                            role="tab" aria-selected="false">Download

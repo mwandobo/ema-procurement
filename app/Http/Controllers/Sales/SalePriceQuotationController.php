@@ -10,7 +10,7 @@ use App\Models\POS\SaleQuotation;
 use App\Models\POS\SaleQuotationItem;
 use Illuminate\Http\Request;
 
-class SaleQuotationController extends Controller
+class SalePriceQuotationController extends Controller
 {
 
     public function index()
@@ -21,7 +21,7 @@ class SaleQuotationController extends Controller
         $clients = Client::all();
 
         $salesQuotations=SaleQuotation::with('client')->get();
-        return view('sales.quotation.index',compact('salesQuotations', 'items', 'clients', 'stores'));
+        return view('sales.quotation-price-approval.index',compact('salesQuotations', 'items', 'clients', 'stores'));
     }
 
     public function store(Request $request)
@@ -81,7 +81,8 @@ class SaleQuotationController extends Controller
 
         $saleQuotationItems = SaleQuotationItem::with('store')->where('sale_quotation_id', $id)->get();
 
-        return view('sales.quotation.items-details', compact('saleQuotation', 'saleQuotationItems',));
+        return view('sales.quotation-price-approval.items-details', compact('saleQuotation', 'saleQuotationItems',));
+
     }
 
 }
