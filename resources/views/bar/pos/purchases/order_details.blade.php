@@ -64,24 +64,24 @@
                     @endif
 
                    {{-- @if(!empty($orders[0]) && $purchases->supplier_id != '')
-                    <a class="btn btn-xs btn-info" title="Collect" 
-                    onclick="return confirm('Are you sure? you want to confirm')" 
+                    <a class="btn btn-xs btn-info" title="Collect"
+                    onclick="return confirm('Are you sure? you want to confirm')"
                     href="{{ route('bar_purchase.confirm_order', $purchases->id)}}">Confirm Orderhhh</a>
                     @endif--}}
-                     
+
                   @if(!empty($orders[0]) && $purchases->supplier_id != '')
                     <form method="GET" action="{{ route('bar_purchase.confirm_order', $purchases->id) }}" style="display: inline;">
-                      
-        
+
+
                         <button class="btn btn-xs btn-info" type="submit" onclick="return confirm('Are you sure you want to confirm?')">
                          Confirm Order
                         </button>
-        
-                        
-                       
+
+
+
                     </form>
                    @endif
-                   
+
 
                     @endcanany
                     @if(!empty($orders[0]) && $purchases->supplier_id != '')

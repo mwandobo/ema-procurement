@@ -91,7 +91,7 @@
                         <option value="{{ old('payment_mode')}}" disabled>Choose option</option>
                         <option value="Cash">Cash</option>
                         <option value="Credit">Credit</option>
-                       
+
                     </select>
                 </div>
 

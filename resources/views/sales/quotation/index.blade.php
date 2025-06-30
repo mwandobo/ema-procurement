@@ -41,13 +41,11 @@
                                         <table class="table datatable-basic table-striped">
                                             <thead>
                                             <tr>
-
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="Platform(s): activate to sort column ascending"
                                                     style="width: 156.484px;">Ref No
                                                 </th>
-
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="Platform(s): activate to sort column ascending"
@@ -71,7 +69,7 @@
                                                     <tr class="gradeA even" role="row">
                                                         <td>
                                                             <a class="nav-link" id="profile-tab2"
-                                                               href="{{ route('purchase.show',$row->id)}}" role="tab"
+                                                               href="{{ route('quotations.show',$row->id)}}" role="tab"
                                                                aria-selected="false">{{$row->reference_no}}</a>
                                                         </td>
                                                         <td> {{$row->client->name}}</td>
@@ -490,6 +488,8 @@
                     html += '<option value="{{ $n->id }}">{{ $n->name }}</option>';
                 @endforeach
                     html += '</select></td>';
+
+
 
                 // Quantity input
                 html += '<td><input type="number" name="quantity[]" class="form-control item_quantity" placeholder="Quantity" data-category_id="' + count + '" required /></td>';

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\discounts;
 
 use App\Http\Controllers\Controller;
-use App\Models\Bar\POS\Batches;
 use App\Models\Bar\POS\Discount;
+use App\Models\Bar\POS\Items;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,35 +13,22 @@ use Illuminate\Validation\Rule;
 
 class DiscountController extends Controller
 {
-    /**
-     * Display a listing of the discounts.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        $discounts = Discount::with('batch')->latest()->get();
-        $batches = Batches::where('quantity', '>', 0)
-                        ->whereHas('item')
-                        ->with('item')
-                        ->get();
-        
-        return view('inventory.discounts.index', compact('discounts', 'batches'));
+        $discounts = Discount::with(['batch', 'item'])->latest()->get();
+        $items = Items::all();
+
+        return view('inventory.discounts.index', compact('discounts', 'items'));
     }
 
-    /**
-     * Store a newly created discount in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'discount_type' => ['required', Rule::in(['percentage', 'fixed'])],
             'value' => 'required|numeric|min:0',
-            'batch_id' => 'required|exists:store_item_batches,id',
+            'item_id' => 'required|exists:store_pos_items,id',
             'min_quantity' => 'required|numeric|min:1',
             'max_quantity' => 'nullable|numeric|gt:min_quantity',
             'start_date' => 'required|date',
@@ -67,7 +54,7 @@ class DiscountController extends Controller
             $discount->name = $request->name;
             $discount->discount_type = $request->discount_type;
             $discount->value = $request->value;
-            $discount->batch_id = $request->batch_id;
+            $discount->item_id = $request->item_id;
             $discount->min_quantity = $request->min_quantity;
             $discount->max_quantity = $request->max_quantity;
             $discount->start_date = $request->start_date;
@@ -86,38 +73,23 @@ class DiscountController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified discount.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $editDiscount = Discount::findOrFail($id);
         $discounts = Discount::with('batch')->latest()->get();
-        $batches = Batches::where('quantity', '>', 0)
-                    ->whereHas('item')
-                    ->with('item')
-                    ->get();
-        
-        return view('inventory.discounts.index', compact('editDiscount', 'discounts', 'batches'));
+        $items = Items::all();
+
+        return view('inventory.discounts.index', compact('editDiscount', 'discounts', 'items'));
     }
 
-    /**
-     * Update the specified discount in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'discount_type' => ['required', Rule::in(['percentage', 'fixed'])],
             'value' => 'required|numeric|min:0',
-            'batch_id' => 'required|exists:store_item_batches,id',
+            'item_id' => 'required|exists:store_pos_items,id',
             'min_quantity' => 'required|numeric|min:1',
             'max_quantity' => 'nullable|numeric|gt:min_quantity',
             'start_date' => 'required|date',
@@ -143,7 +115,7 @@ class DiscountController extends Controller
             $discount->name = $request->name;
             $discount->discount_type = $request->discount_type;
             $discount->value = $request->value;
-            $discount->batch_id = $request->batch_id;
+            $discount->item_id = $request->item_id;
             $discount->min_quantity = $request->min_quantity;
             $discount->max_quantity = $request->max_quantity;
             $discount->start_date = $request->start_date;
@@ -162,18 +134,13 @@ class DiscountController extends Controller
         }
     }
 
-    /**
-     * Remove the specified discount from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         try {
             $discount = Discount::findOrFail($id);
             $discount->delete();
-            
+
             Toastr::success('Discount deleted successfully.', 'Success');
             return redirect()->route('inventory.discounts.index');
         } catch (\Exception $e) {

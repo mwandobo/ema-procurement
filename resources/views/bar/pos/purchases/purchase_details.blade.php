@@ -37,8 +37,8 @@
                         onclick="return confirm('Are you sure? you want to approve')"
                         href="{{ route('bar_purchase.final_approval', $purchases->id)}}">
                         Final Approval</a>
-                    
-                  
+
+
                     <a class="btn btn-xs btn-danger" title="Collect"
                         onclick="return confirm('Are you sure? you want to disapprove')"
                         href="{{ route('bar_purchase.final_disapproval', $purchases->id)}}">
@@ -54,21 +54,21 @@
                     @canany(['manage-first-approval', 'manage-second-approval','manage-third-approval'])
                     @if($purchases->approval_1 != '' && $purchases->approval_2 != '' && $purchases->approval_3 != '')
 
-                    
-                    
+
+
                      @if( $purchases->complete_supplier_status !== 2)
                         <a class="btn btn-xs btn-info" id="profile-tab2" data-id="{{ $purchases->id  }}" data-type="supplier_invoice"
                         onclick="model({{ $purchases->id  }},'supplier_invoice')" href="" data-toggle="modal"
                         data-target="#appFormModal" role="tab" aria-selected="false">Supplier Invoice</a>
                     @endif
 
-                    
+
 
 
                     <!-- <a class="btn btn-xs btn-info " data-placement="top3"
                         href="{{ route('purchase_order_tracking.show',$purchases->id)}}"
                          title="Purchase Shipment Tracking"> Purchase Shipment Tracking </a>
-                         
+
                      <a class="btn btn-xs btn-info " data-placement="top3"
                         href="{{ route('clearing_tracking.show',$purchases->id)}}"
                          title="Purchase Shipment Tracking"> Clearing Tracking Activies</a> -->
@@ -186,12 +186,12 @@ $settings= App\Models\Setting::first();
 
 
                         <?php
-                               
+
                                  $sub_total = 0;
                                  $gland_total = 0;
                                  $tax=0;
                                  $i =1;
-       
+
                                  ?>
 
                         <div class="table-responsive mb-lg">
@@ -213,10 +213,10 @@ $settings= App\Models\Setting::first();
                                     <?php
                                          $sub_total +=$row->total_cost;
                                          $gland_total +=$row->total_cost +$row->total_tax;
-                                         $tax += $row->total_tax; 
-                                         
+                                         $tax += $row->total_tax;
+
                                         $due=App\Models\Bar\POS\PurchaseHistory::where('purchase_id',$purchases->id)->where('item_id',$row->item_name)->where('type', 'Purchase Supplier Invoice')->sum('quantity');
-                                        
+
                                         $qty=$due;
 
                                          ?>
@@ -352,7 +352,7 @@ $settings= App\Models\Setting::first();
 
                             <?php
                                  $i =1;
-       
+
                                  ?>
                             <div class="table-responsive">
                                 <table class="table datatable-basic table-striped">
@@ -402,9 +402,9 @@ $settings= App\Models\Setting::first();
                                                 <div class="badge badge-success badge-shadow">Paid</div>
                                                 @endif
                                             </td>
-                                            
-                                            
-                                            
+
+
+
                                            <td>
     @if(!empty($row->attachment))
         @php

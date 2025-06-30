@@ -25,11 +25,11 @@
 
                <div class="col-lg-10">
                   @if($purchases->approval_1 == '')
-                 <a class="btn btn-xs btn-primary"  onclick="return confirm('Are you sure?')"   href="{{ route('purchase.edit', $purchases->id)}}"  title="" > Edit </a>          
-            
+                 <a class="btn btn-xs btn-primary"  onclick="return confirm('Are you sure?')"   href="{{ route('purchase.edit', $purchases->id)}}"  title="" > Edit </a>
+
                 @endif
 
-               
+
 
                @can('manage-first-approval')
                                                             @if($purchases->approval_1 == '' && $purchases->status == 0)
@@ -52,8 +52,8 @@
                           @endif
                                 @endcan
 
-  --}}      
- 
+  --}}
+
   @canany(['manage-first-approval', 'manage-second-approval','manage-third-approval'])
   @if( $purchases->status == 1)
                          <a  class="btn btn-xs btn-info" data-id="{{ $purchases->id  }}" data-type="order"   onclick="model({{ $purchases->id  }},'order')"   href=""  data-toggle="modal" data-target="#appFormModal">Create Order</a>
@@ -70,14 +70,14 @@
   @endcanany
 
  @if(!empty($orders[0]) && $purchases->supplier_id != '')
-                 <a class="btn btn-xs btn-primary"  onclick="return confirm('Are you sure?')"   href="{{ route('purchase.edit', $purchases->id)}}"  title="" > Edit </a>          
-            
+                 <a class="btn btn-xs btn-primary"  onclick="return confirm('Are you sure?')"   href="{{ route('purchase.edit', $purchases->id)}}"  title="" > Edit </a>
+
                 @endif
 
 
 
-             <a class="btn btn-xs btn-success"  href="{{ route('purchase_pdfview',['download'=>'pdf','id'=>$purchases->id]) }}"  title="" > Download PDF </a>         
-                                         
+             <a class="btn btn-xs btn-success"  href="{{ route('purchase_pdfview',['download'=>'pdf','id'=>$purchases->id]) }}"  title="" > Download PDF </a>
+
     </div>
 
 <br>
@@ -99,16 +99,16 @@
             </div>
           </div>
 
-  
+
     <?php
 }
 ?>
 
 <br>
- 
+
                 <div class="card">
                       <div class="card-body">
-                       
+
                         <?php
 $settings= App\Models\Setting::first();
 
@@ -121,19 +121,19 @@ $settings= App\Models\Setting::first();
                                    <div class="col-lg-6 col-xs-6 ">
                 <img class="pl-lg" style="width: 133px;height: 120px;"src="{{url('images')}}/{{$settings->site_logo}}">
             </div>
-                                  
+
  <div class="col-lg-3 col-xs-3">
 
                                     </div>
 
                                       <div class="col-lg-3 col-xs-3">
-                                        
-                                       <h5 class=mb0">REF NO : {{$purchases->reference_no}}</h5>
-                                      Purchase Date : {{Carbon\Carbon::parse($purchases->purchase_date)->format('d/m/Y')}}                  
-              <br>Due Date : {{Carbon\Carbon::parse($purchases->due_date)->format('d/m/Y')}}                                          
 
-                                      
-          <br>Status: 
+                                       <h5 class=mb0">REF NO : {{$purchases->reference_no}}</h5>
+                                      Purchase Date : {{Carbon\Carbon::parse($purchases->purchase_date)->format('d/m/Y')}}
+              <br>Due Date : {{Carbon\Carbon::parse($purchases->due_date)->format('d/m/Y')}}
+
+
+          <br>Status:
                                                                                          @if($purchases->approval_1 == '' && $purchases->status == 0)
                                                     <span class="badge badge-danger badge-shadow">Waiting For First Approval</span>
                                                          @elseif($purchases->approval_1 != '' && $purchases->approval_2 == '' && $purchases->status == 0)
@@ -149,25 +149,25 @@ $settings= App\Models\Setting::first();
                                             @elseif($purchases->status == 4)
                                             <span class="badge badge-danger badge-shadow">Cancelled</span>
                                             @endif
-                                       
-                                        <br>Currency: {{$purchases->exchange_code }}                                                
-                    
-                    
-                
+
+                                        <br>Currency: {{$purchases->exchange_code }}
+
+
+
             </div>
                                 </div>
 
 
-                               
-                            
-                                
+
+
+
                                 <?php
-                               
+
                                  $sub_total = 0;
                                  $gland_total = 0;
                                  $tax=0;
                                  $i =1;
-       
+
                                  ?>
 
                                <div class="table-responsive mb-lg">
@@ -188,7 +188,7 @@ $settings= App\Models\Setting::first();
                                         <?php
                                          $sub_total +=$row->total_cost;
                                          $gland_total +=$row->total_cost +$row->total_tax;
-                                         $tax += $row->total_tax; 
+                                         $tax += $row->total_tax;
                                          ?>
                                         <tr>
                                             <td class="">{{$i++}}</td>
@@ -197,17 +197,17 @@ $settings= App\Models\Setting::first();
                                         ?>
                                             <td class=""><strong class="block">{{$item_name->name}}</strong></td>
                                             <td class="">{{ $row->due_quantity }} </td>
-                                        <td class="">{{number_format($row->price ,2)}}  </td>                                         
+                                        <td class="">{{number_format($row->price ,2)}}  </td>
                                          <td class="">
-                               {{number_format($row->total_tax ,2)}} 
+                               {{number_format($row->total_tax ,2)}}
 </td>
                                             <td class="">{{number_format($row->total_cost ,2)}} </td>
-                                            
+
                                         </tr>
                                         @endforeach
                                         @endif
 
-                                       
+
                                     </tbody>
  <tfoot>
 <tr>
@@ -285,21 +285,21 @@ $settings= App\Models\Setting::first();
 </table>
                             </div>
 
-                                    
-                                
-                             
+
+
+
                             </div>
 
                         </div>
 
                     </div>
                 </div>
-          
 
-         
+
+
 
   @if(!empty($orders[0]))
-            
+
                 <div class="card">
                     <div class="card-body">
 <div class="col-12 col-md-12 col-lg-12">
@@ -307,14 +307,14 @@ $settings= App\Models\Setting::first();
                       <div class="tab-content" id="myTab3Content">
                             <div class="tab-pane fade show active" id="about" role="tabpanel"
                                 aria-labelledby="home-tab2">
-                                <div class="row">     
-                            
-                                
+                                <div class="row">
+
+
                                 <?php
-                               
-                                
+
+
                                  $i =1;
-       
+
                                  ?>
                                 <div class="table-responsive">
          <table class="table datatable-basic table-striped">
@@ -328,9 +328,9 @@ $settings= App\Models\Setting::first();
                                         </tr>
                                     </thead>
                                     <tbody>
-                                       
+
                                         @foreach($orders as $row)
-                                       
+
                                         <tr>
                                            <td class=""> {{$loop->iteration}}</td>
                                             <td class=""> {{$row->supplier->name}}</td>
@@ -339,17 +339,17 @@ $settings= App\Models\Setting::first();
                                             @if($row->status == 0)
                                                     <div class="badge badge-danger badge-shadow">Not Approved</div>
                                                     @elseif($row->status == 1)
-                                                    <div class="badge badge-success badge-shadow">Approved</div>                                                    
+                                                    <div class="badge badge-success badge-shadow">Approved</div>
                                                     @endif
                                           </td>
                                            <td>  <a class="nav-link"  href="{{ route('order_pdfview',['download'=>'pdf','id'=>$row->id]) }}"  title="" > Download Purchase Order </a></td>
                                         </tr>
                                         @endforeach
-                                       
+
 
 
                                     </tbody>
-                                   
+
                                 </table>
                               </div>
                             </div>
@@ -369,7 +369,7 @@ $settings= App\Models\Setting::first();
     <div class="modal-dialog ">
     </div>
 </div>
-   
+
 @endsection
 
 @section('scripts')
@@ -386,7 +386,7 @@ $settings= App\Models\Setting::first();
                 lengthMenu: '<span>Show:</span> _MENU_',
              paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' }
             },
-        
+
         });
     </script>
 

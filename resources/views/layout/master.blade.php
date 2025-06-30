@@ -110,11 +110,11 @@ $user= App\Models\User::find(auth()->user()->id);
 
     </div>
 
-    
+
     <!-- /page content -->
     @include('layout.scripts')
     {!! Toastr::message() !!}
-   
+
 </body>
 
 

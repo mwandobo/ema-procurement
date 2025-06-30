@@ -1,2 +1,9 @@
 side bar is aside2.blade.php
 i have new route called v2 where all my routes will be there
+i have added item_id on store_item_discounts
+items are from model use App\Models\Bar\POS\Items;
+Purchase controller is from Bar/Purchase
+
+use App\Models\Inventory\Location;
+
+

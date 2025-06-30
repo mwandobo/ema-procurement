@@ -40,7 +40,7 @@
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="Engine version: activate to sort column ascending"
-                                                    style="width: 101.219px;">Product/Batch</th>
+                                                    style="width: 101.219px;">Item</th>
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="Engine version: activate to sort column ascending"
@@ -73,8 +73,8 @@
                                             <tr class="gradeA even" role="row">
                                                 <th>{{ $loop->iteration }}</th>
                                                 <td>{{ $row->name }}</td>
-                                                <td>{{ $row->batch->batch_code }}
-                                                    <p class="mb-0 text-muted"> {{ $row->batch->item->name }}</p>
+                                                <td>{{ $row->item?->item_code }}
+                                                    <p class="mb-0 text-muted"> {{ $row->item?->name }}</p>
                                                 </td>
                                                 <td>
                                                     @if($row->discount_type == 'percentage')
@@ -99,7 +99,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    {{ $row->start_date->format('M d, Y') }} 
+                                                    {{ $row->start_date->format('M d, Y') }}
                                                     @if($row->end_date)
                                                     - {{ $row->end_date->format('M d, Y') }}
                                                     @else
@@ -108,7 +108,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-inline">
-                                                        <a class="list-icons-item text-info" 
+                                                        <a class="list-icons-item text-info"
                                                             href="{{ route('inventory.discounts.edit', $row->id) }}" title="Edit">
                                                             <i class="icon-pencil7"></i>
                                                         </a>
@@ -119,7 +119,7 @@
                                                                 <i class="icon-trash"></i>
                                                             </button>
                                                         </form>
-                                                        
+
                                                     </div>
                                                 </td>
                                             </tr>
@@ -150,22 +150,22 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-2 col-form-label">Discount Name</label>
                                                     <div class="col-lg-10">
-                                                        <input type="text" name="name" class="form-control" required 
+                                                        <input type="text" name="name" class="form-control" required
                                                         value="{{ isset($editDiscount) ? $editDiscount->name : old('name') }}"
                                                         placeholder="e.g. Summer Sale, Clearance, Volume Discount">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
-                                                    <label class="col-lg-2 col-form-label">Batch</label>
+                                                    <label class="col-lg-2 col-form-label">Item</label>
                                                     <div class="col-lg-10">
-                                                        <select class="form-control m-b" name="batch_id" required id="batch_id" style="width: 100% !important">
-                                                            <option value="">Select Batch</option>
-                                                            @if(!empty($batches))
-                                                            @foreach($batches as $batch)
-                                                                <option value="{{ $batch->id }}" {{ isset($editDiscount) && $editDiscount->batch_id == $batch->id ? 'selected' : '' }}>
-                                                                    {{ $batch->batch_code }} - {{ $batch->item->name }} 
-                                                                    (Current Price: {{ number_format($batch->selling_price, 2) }})
+                                                        <select class="form-control m-b" name="item_id" required id="item_id" style="width: 100% !important">
+                                                            <option value="">Select Item</option>
+                                                            @if(!empty($items))
+                                                            @foreach($items as $item)
+                                                                <option value="{{ $item->id }}" {{ isset($editDiscount) && $editDiscount->item_id == $item->id ? 'selected' : '' }}>
+                                                                    {{ $item->item_code }} - {{ $item->name }}
+                                                                    (Current Price: {{ number_format($item->seles_price, 2) }})
                                                                 </option>
                                                             @endforeach
                                                             @endif
@@ -182,11 +182,11 @@
                                                             <option value="fixed" {{ isset($editDiscount) && $editDiscount->discount_type == 'fixed' ? 'selected' : '' }}>Fixed Amount</option>
                                                         </select>
                                                     </div>
-                                                
+
                                                     <label class="col-lg-2 col-form-label">Value</label>
                                                     <div class="col-lg-4">
                                                         <div class="input-group">
-                                                            <input type="number" name="value" class="form-control" 
+                                                            <input type="number" name="value" class="form-control"
                                                                 value="{{ isset($editDiscount) ? $editDiscount->value : old('value') }}"
                                                                 min="0" step="0.01" required>
                                                             <div class="input-group-append" id="value-addon">
@@ -200,11 +200,11 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-2 col-form-label">Min Quantity</label>
                                                     <div class="col-lg-4">
-                                                        <input type="number" name="min_quantity" class="form-control" min="1" step="0.01" 
+                                                        <input type="number" name="min_quantity" class="form-control" min="1" step="0.01"
                                                             value="{{ isset($editDiscount) ? $editDiscount->min_quantity : old('min_quantity', 1) }}" required>
                                                         <small class="form-text text-muted">Minimum quantity required for discount</small>
                                                     </div>
-                                                
+
                                                     <label class="col-lg-2 col-form-label">Max Quantity</label>
                                                     <div class="col-lg-4">
                                                         <input type="number" name="max_quantity" class="form-control" min="0" step="0.01"
@@ -216,10 +216,10 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-2 col-form-label">Start Date</label>
                                                     <div class="col-lg-4">
-                                                        <input type="date" name="start_date" class="form-control" 
+                                                        <input type="date" name="start_date" class="form-control"
                                                             value="{{ isset($editDiscount) ? $editDiscount->start_date->format('Y-m-d') : old('start_date', date('Y-m-d')) }}" required>
                                                     </div>
-                                                
+
                                                     <label class="col-lg-2 col-form-label">End Date</label>
                                                     <div class="col-lg-4">
                                                         <input type="date" name="end_date" class="form-control"
@@ -232,7 +232,7 @@
                                                     <label class="col-lg-2 col-form-label">Status</label>
                                                     <div class="col-lg-10">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" 
+                                                            <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1"
                                                                 {{ isset($editDiscount) && $editDiscount->is_active ? 'checked' : (!isset($editDiscount) ? 'checked' : '') }}>
                                                             <label class="form-check-label" for="is_active">
                                                                 Active

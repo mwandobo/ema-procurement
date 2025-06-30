@@ -174,16 +174,12 @@ class PurchaseController extends Controller
         return redirect(route('bar_purchase.show', $purchase->id));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id, Request $request)
     {
         //
         $purchases = Purchase::find($id);
+
         $purchase_items = PurchaseItems::where('purchase_id', $id)->where('due_quantity', '>', '0')->get();
         $payments = PurchasePayments::where('purchase_id', $id)->get();
         $name = Items::all();
@@ -200,7 +196,7 @@ class PurchaseController extends Controller
                 break;
             case 'supplier_invoice':
                 return view('bar.pos.purchases.purchase_supplier_invoice', compact('currency','purchases', 'items', 'purchase_items', 'payments', 'id', 'name'));
-                break;    
+                break;
             case 'costing':
                 return view('bar.pos.purchases.costing_item_details', compact('purchases', 'purchase_items', 'items', 'payments', 'id', 'name'));
                 break;
@@ -219,7 +215,7 @@ class PurchaseController extends Controller
         }
     }
 
-    
+
     public function store_costing_items_batches(Request $request)
     {
 
@@ -320,11 +316,11 @@ class PurchaseController extends Controller
         // dd($items);
         $type = "";
         return view('bar.pos.purchases.purchase_requisition', compact('name', 'supplier', 'currency', 'location', 'data', 'id', 'items', 'type'));
-    
+
     }
 
 
-   
+
 
 
     /**
@@ -408,11 +404,11 @@ class PurchaseController extends Controller
                         }
 
                         // if(!empty($qtyArr[$i])){
-                        // for($x = 1; $x <= $qtyArr[$i]; $x++){    
+                        // for($x = 1; $x <= $qtyArr[$i]; $x++){
                         // $name=Inventory::where('id', $savedArr[$i])->first();
                         // $dt=date('Y',strtotime($data['purchase_date']));
                         //$lists = array(
-                        //'serial_no' => $name->name."_" .$id."_".$x."_" .$dt,                      
+                        //'serial_no' => $name->name."_" .$id."_".$x."_" .$dt,
                         //'brand_id' => $savedArr[$i],
                         // 'added_by' => auth()->user()->added_by,
                         // 'purchase_id' =>   $id,
@@ -421,7 +417,7 @@ class PurchaseController extends Controller
                         // 'status' => '0');
 
 
-                        //InventoryList::create($lists);   
+                        //InventoryList::create($lists);
 
                         //}
                         //}
@@ -662,7 +658,7 @@ class PurchaseController extends Controller
 
             Toastr::success('First Approval is Successfully', 'Success');
             return redirect(route('bar_purchase.order'));
-        } 
+        }
         else {
             $purchase = Purchase::find($id);
             //$data['supplier_id']=$request->supplier_id;
@@ -994,7 +990,7 @@ class PurchaseController extends Controller
         $data['approval_2'] = '';
         $data['approval_2_date'] = '';
         $data['disapprove_status'] = 1;
-        
+
         $purchase->update($data);
 
         if (!empty($purchase)) {
@@ -1134,7 +1130,7 @@ class PurchaseController extends Controller
         PurchaseOrderTracking::create($tracking_pur);
 
         // return redirect()->route('cf.tracking.index')
-        // ->with('success', 'Shipment status updated successfully'); 
+        // ->with('success', 'Shipment status updated successfully');
 
 
         Toastr::success('Tracking Status updated Successfully', 'Success');
@@ -1144,18 +1140,18 @@ class PurchaseController extends Controller
 
     public function purchase_supplier_invoice(Request $request)
     {
-    
+
         $id = $request->purchase_id;
         $nameArr = $request->items_id;
         $qtyArr = $request->quantity;
         $savedArr = $request->items_id;
         $purchase_itemArr = $request->purchase_items_id;
-        
+
         $shipment_cost = $request->shipment_cost;
         $currency = $request->currency;
 
         $purchase = Purchase::find($id);
-        
+
         Purchase::where('id', $id)->update([
           'exchange_rate_2' => $request->exchange_rate,
           'shipment_cost' => $request->shipment_cost,
@@ -1257,7 +1253,7 @@ class PurchaseController extends Controller
 
                     // $dq = Purchase::find($id);
                     // $pdq = $dq->due_quantity - $qtyArr[$i];
-                    
+
                     // if($pdq <= 0)
                     // {
                     // $complete_supplier_status = 2;
@@ -1268,7 +1264,7 @@ class PurchaseController extends Controller
                     // Purchase::where('id', $id)->update(['due_quantity' => $pdq,'complete_supplier_status' => $complete_supplier_status  ]);
 
 
-                   
+
                 }
             }
         }
@@ -1301,18 +1297,18 @@ class PurchaseController extends Controller
 
     public function grn222(Request $request)
     {
-    
+
         $id = $request->purchase_id;
         $nameArr = $request->items_id;
         $qtyArr = $request->quantity;
         $savedArr = $request->items_id;
-        
+
         $exchange_rate_2 = $request->exchange_rate_2;
         $shipment_cost = $request->shipment_cost;
         $currency = $request->currency;
 
         $purchase = Purchase::find($id);
-        
+
         Purchase::where('id', $id)->update([
           'exchange_rate_2' => $request->exchange_rate_2,
           'shipment_cost' => $request->shipment_cost,
@@ -1320,7 +1316,7 @@ class PurchaseController extends Controller
           'supplier_status' => 1,
         ]);
 
-        
+
 
         if (!empty($nameArr)) {
             for ($i = 0; $i < count($nameArr); $i++) {
@@ -1374,7 +1370,7 @@ class PurchaseController extends Controller
 
                     $dq = Purchase::find($id);
                     $pdq = $dq->due_quantity - $qtyArr[$i];
-                    
+
                     if($pdq <= 0)
                     {
                     $complete_supplier_status = 2;
@@ -1478,8 +1474,8 @@ class PurchaseController extends Controller
         Toastr::success('Good Receive Done Successfully', 'Success');
         return redirect(route('bar_purchase.index'));
     }
-    
-    
+
+
     public function grn(Request $request)
     {
         $id = $request->purchase_supplier_invoice_id;
@@ -1619,25 +1615,25 @@ class PurchaseController extends Controller
         Toastr::success('Good Receive Done Successfully', 'Success');
         return redirect(route('supplier_invoice'));
     }
-        
-        
-    
+
+
+
 
 
     public function grn_old(Request $request)
     {
-    
+
         $id = $request->purchase_supplier_invoice_id;
         $inv_itemArry = $request->invoice_item_id;
         $nameArr = $request->items_id;
         $qtyArr = $request->quantity;
         $savedArr = $request->items_id;
-        
+
 
         $purchase = PurchaseSupplierInvoice::find($id);
 
         // $pdq = 0;
-        
+
 
         if (!empty($nameArr)) {
             for ($i = 0; $i < count($nameArr); $i++) {
@@ -1691,7 +1687,7 @@ class PurchaseController extends Controller
 
                     // $dq = PurchaseSupplierInvoice::find($id);
                     $pdq =  $qtyArr[$i];
-                    
+
 
                     PurchaseSupplierInvoice::where('id', $inv_itemArry[$i])->update(['received_qty' => $pdq]);
 
@@ -1720,7 +1716,7 @@ class PurchaseController extends Controller
                     } else {
                         $total_tax = 0;
                     }
-                    
+
                     $cost = $itm->price * $qtyArr[$i];
 
                     $cr = AccountCodes::where('account_name', 'Bar Stock')->first();
@@ -1841,9 +1837,9 @@ class PurchaseController extends Controller
         $items = PurchaseItems::where('purchase_id', $id)->get();
 
         $type = "";
-        
+
         return view('bar.pos.purchases.supplier_purchases_price', compact('name', 'supplier', 'currency', 'location', 'data', 'id', 'items', 'type'));
-    
+
 
     }
 
@@ -1935,7 +1931,7 @@ class PurchaseController extends Controller
 
 
 
-                
+
             if (!empty($purchase)) {
 
                 $activity = Activity::create(
@@ -1953,8 +1949,8 @@ class PurchaseController extends Controller
             return redirect(route('bar_purchase.index'));
 
             // return redirect(route('bar_purchase.order'));
-       
-       
+
+
     }
 
 
@@ -1969,10 +1965,10 @@ class PurchaseController extends Controller
         $items = PurchaseItems::where('purchase_id', $id)->get();
 
         $type = "";
-        
+
         return view('bar.pos.purchases.supplier_purchase_price', compact('name', 'supplier', 'currency', 'location', 'data', 'id', 'items', 'type'));
-    
-        
+
+
     }
 
 
@@ -2148,19 +2144,19 @@ class PurchaseController extends Controller
     public function supplier_invoice()
     {
         $invoices = PurchaseSupplierInvoice::select('purchase_id', 'reference_no', 'purchase_date', 'supplier_id', 'total_cost', 'supplier_date', 'purchase_amount')
-        ->groupBy('reference_no')    
+        ->groupBy('reference_no')
         ->get();
 
        // dd($invoices);
 
         return view('bar.pos.purchases.supplier_invoice', compact('invoices'));
     }
-    
+
     public function supplier_invoice_show($reference_no)
     {
         $invoice_main = PurchaseSupplierInvoice::where('reference_no', $reference_no)->first();
         $invoice_items = PurchaseSupplierInvoice::where('reference_no', $reference_no)->get();
-        
+
         return view('bar.pos.purchases.supplier_invoice_show', compact('invoice_main', 'invoice_items', 'reference_no'));
     }
 
@@ -2292,7 +2288,7 @@ public function download_supplier_payment_pdf($reference_no, $id)
     $pdf = Pdf::loadView('bar.pos.purchases.supplier_payment_pdf', compact('payment'));
     return $pdf->download('payment_' . $payment->reference_no . '.pdf');
 }
-    
+
 
     public function clearing_tracking_reference($reference_no)
     {
@@ -2308,13 +2304,13 @@ public function download_supplier_payment_pdf($reference_no, $id)
             ->select('id', 'reference_no', 'clearing_cost', 'shipping_cost')
             ->get();
         $clearingItems = SupplierClearingItem::where('reference_no', $reference_no)
-                ->with('item') 
-                ->get(['item_id', 'item_name', 'item_tax']); 
+                ->with('item')
+                ->get(['item_id', 'item_name', 'item_tax']);
 
         $groupedItems = $clearingItems->groupBy('item_name')->map(function ($items) {
                 return [
-                    'item_name' => ucfirst($items->first()->item_name), 
-                    'item_tax' => $items->sum('item_tax'), 
+                    'item_name' => ucfirst($items->first()->item_name),
+                    'item_tax' => $items->sum('item_tax'),
                     'item_code' => $items->first()->item ? $items->first()->item->item_code : 'N/A'
                 ];
             })->values();
@@ -2359,8 +2355,8 @@ public function download_supplier_payment_pdf($reference_no, $id)
         $purchaseItems = PurchaseSupplierInvoice::where('reference_no', $reference_no)
             ->select('id', 'item_id', 'item_name')
             ->get();
-        
-        
+
+
 
         if ($purchaseItems->isEmpty()) {
             Log::warning('No purchase items found for reference_no', ['reference_no' => $reference_no]);
@@ -2602,7 +2598,7 @@ public function download_supplier_payment_pdf($reference_no, $id)
 
         return view('bar.pos.purchases.item_costing_invoice', compact('costings'));
     }
-    
+
      public function update_sales_price(Request $request, $item_id)
     {
         $request->validate([
@@ -2610,7 +2606,7 @@ public function download_supplier_payment_pdf($reference_no, $id)
         ]);
 
         $costing = Costing::where('item_id', $item_id)->firstOrFail();
-        
+
         $costing->sales_price = $request->sales_price;
         $costing->save();
 

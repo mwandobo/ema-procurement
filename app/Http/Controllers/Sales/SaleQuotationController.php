@@ -8,6 +8,7 @@ use App\Models\Bar\POS\Items;
 use App\Models\Inventory\Location;
 use App\Models\POS\PurchaseItems;
 use App\Models\POS\SaleQuotation;
+use App\Models\POS\SaleQuotationItem;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
@@ -27,8 +28,6 @@ class SaleQuotationController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('Creating SaleQuotation - Form Data:', $request->all());
-
         $request->validate([
             'client_id' => 'required|exists:store_pos_clients,id',
             'item_name' => 'required|array',
@@ -78,6 +77,14 @@ class SaleQuotationController extends Controller
         return response()->json($item);
     }
 
+    public function show($id, Request $request)
+    {
+        $saleQuotation = SaleQuotation::find($id);
 
+        $saleQuotationItems = SaleQuotationItem::with('store')->where('sale_quotation_id', $id)->get();
+
+        return view('sales.quotation.items-details', compact('saleQuotation', 'saleQuotationItems',));
+
+    }
 
 }

@@ -22,7 +22,7 @@ class Discount extends Model
         'start_date',
         'end_date',
     ];
-    
+
     protected $casts = [
         'value' => 'decimal:2',
         'min_quantity' => 'decimal:2',
@@ -40,31 +40,36 @@ class Discount extends Model
         return $this->belongsTo(Batches::class);
     }
 
+    public function item()
+    {
+        return $this->belongsTo(Items::class, 'item_id');
+    }
+
      /**
      * Check if the discount is currently valid based on dates.
      */
     public function isValid()
     {
         $now = now()->startOfDay();
-        
+
         // Check if discount is active
         if (!$this->is_active) {
             return false;
         }
-        
+
         // Check start date
         if ($this->start_date->gt($now)) {
             return false;
         }
-        
+
         // Check end date if specified
         if ($this->end_date && $this->end_date->lt($now)) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * Scope a query to only include active discounts.
      */
@@ -77,7 +82,7 @@ class Discount extends Model
                               ->orWhere('end_date', '>=', now());
                     });
     }
-    
+
     /**
      * Calculate discount amount for a given price and quantity.
      */
@@ -87,12 +92,12 @@ class Discount extends Model
         if ($quantity < $this->min_quantity) {
             return 0;
         }
-        
+
         // Check if quantity exceeds maximum (if specified)
         if ($this->max_quantity && $quantity > $this->max_quantity) {
             return 0;
         }
-        
+
         if ($this->discount_type === 'percentage') {
             return ($price * $this->value) / 100;
         } else {
