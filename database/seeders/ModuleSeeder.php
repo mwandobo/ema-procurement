@@ -19,7 +19,7 @@ class ModuleSeeder extends Seeder
             ['slug' => 'payment'],
         ];
 foreach ($data as $row) {
-    SystemModule::updateOrCreate($row);
+    SystemModule::firstOrCreate($row);
 }
     }
 }

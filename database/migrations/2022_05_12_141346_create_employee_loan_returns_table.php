@@ -19,7 +19,7 @@ class CreateEmployeeLoanReturnsTable extends Migration
             $table->decimal('loan_amount');
             $table->integer('loan_id');
             $table->string('deduct_month');
-            $table->date('request_date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('request_date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('status')->comment('0=pending,1=approved,2=reject,3=paid');
             $table->timestamps();
         });

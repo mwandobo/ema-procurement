@@ -21,7 +21,7 @@ class CreateSalaryPaymentsTable extends Migration
             $table->string('payment_month');
             $table->text('comments')->nullable();
             $table->string('account_id');
-            $table->date('paid_date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('paid_date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('deduct_from')->nullable();
             $table->integer('added_by');
             $table->timestamps();

@@ -13,24 +13,27 @@ class CreateCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::create('companies', function (Blueprint $table) {
-            $table->id();
-            $table->string('cname');
-            $table->string('organization');
-            $table->string('regDate');
-            $table->string('regNo');
-            $table->integer('employeeNo');
-            $table->string('regHead');
-            $table->string('employeeBox');
-            $table->string('tinNo');
+        if(!Schema::hasTable('companies')){
+            Schema::create('companies', function (Blueprint $table) {
+                $table->id();
+                $table->string('cname');
+                $table->string('organization');
+                $table->string('regDate');
+                $table->string('regNo');
+                $table->integer('employeeNo');
+                $table->string('regHead');
+                $table->string('employeeBox');
+                $table->string('tinNo');
 
-            $table->string('phone');
-            $table->string('contactName');
-            $table->string('email');
-            $table->string('personalPhone');
+                $table->string('phone');
+                $table->string('contactName');
+                $table->string('email');
+                $table->string('personalPhone');
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+            });
+
+        }
     }
 
     /**

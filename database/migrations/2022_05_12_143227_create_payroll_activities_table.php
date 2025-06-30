@@ -18,7 +18,7 @@ class CreatePayrollActivitiesTable extends Migration
             $table->string('module_id');
             $table->string('module');
             $table->string('activity');
-            $table->date('date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('request_date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('added_by');
             $table->timestamps();
         });

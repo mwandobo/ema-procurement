@@ -17,7 +17,7 @@ class CreatePayslipsTable extends Migration
             $table->id();
             $table->string('payslip_number')->nullable();
             $table->string('salary_payment_id');
-            $table->date('payslip_generate_date')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('payslip_generate_date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('added_by');
             $table->timestamps();
         });

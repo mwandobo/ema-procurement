@@ -25,6 +25,12 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::group(['prefix' => 'v2'], function () {
+    Route::group(['middleware' => 'auth', 'prefix' => 'sales'], function () {
+        Route::resource('quotations', 'Sales\SaleQuotationController');
+        Route::get('item', 'Sales\SaleQuotationController@findItem');
+    });
+});
 
 
 Route::group(['prefix' => 'visitors'], function () {
@@ -32,8 +38,6 @@ Route::group(['prefix' => 'visitors'], function () {
 });
 
 
-
-    
 Route::get('display_modal', 'Bar\POS\PurchaseOrderTrackingController@discountModal')
 ->name('gymkhana_test');
 
@@ -44,26 +48,26 @@ Route::post('/clearing_tracking/assign', 'Bar\POS\PurchaseOrderTrackingControlle
 Route::get('purchase_tracking_import', 'Bar\POS\ImportController@purchase_order_sample')
     ->name('purchase_tracking_sample.import');
 
-    
+
 Route::get('purchase_tracking_import', 'Bar\POS\ImportController@purchase_order_sample')
     ->name('purchase_tracking_sample.import');
-    
 
 
-    
+
+
 Route::get('purchase_tracking_sample_new', 'Bar\POS\ImportController@purchase_order_sample')
     ->name('purchase_tracking_sample_new.import');
-    
+
 Route::get('diy_purchase_tracking_sample_g', 'Bar\POS\ImportController@purchase_order_sample_g')
     ->name('diy_purchase_tracking_sample_g.import');
-    
-    
+
+
 Route::get('clearing_tracking_sample', 'Bar\POS\ImportController@clearing_sample')
     ->name('clearing_tracking_sample.import');
-    
+
 Route::post('clearing_tracking_import', 'Bar\POS\ImportController@clearing_tracking_import')
     ->name('clearing_tracking.import');
-    
+
 Route::post('/purchase_order/import', 'Bar\POS\ImportController@purchase_order_import')
     ->name('purchase_order.import');
 
@@ -96,7 +100,7 @@ Route::group(['prefix' => 'members'], function () {
     Route::get('member_business/{member_id}/{id}/edit', 'Members\MembersController@member_business_edit')->name('member_business_edit');
     Route::post('member_business/{id}/update', 'Members\MembersController@member_business_updates')->name('member_business_updates');
 
-    // 
+    //
 
     // sports
 
@@ -110,7 +114,7 @@ Route::group(['prefix' => 'members'], function () {
     Route::get('member_deposit_index', 'Members\ChargesController@member_deposit_index')->name('member_deposit_index.index');
     Route::post('member_deposit_insert', 'Members\ChargesController@member_deposit_store')->name('member_deposit_index.store');
 
-    // 
+    //
 
     //dependent
     Route::get('member_dependent/{id}', 'Members\MembersController@add_dependant')->name('member_dependent_index');
@@ -791,25 +795,25 @@ Route::group(['prefix' => 'pos'], function () {
         Route::resource('debit_note_payment', 'POS\ReturnPurchasesPaymentController')->middleware('auth');
         Route::get('debit_note_pdfview', array('as' => 'debit_note_pdfview', 'uses' => 'POS\ReturnPurchasesController@debit_note_pdfview'))->middleware('auth');
     });
-    
-    
+
+
     Route::group(['prefix' => 'sales'], function () {
 
 
 
        Route::resource('profoma/invoice', 'Bar\POS\SalesProfomaInvoiceController')->middleware('auth');
 
-       Route::resource('invoices', 'Bar\POS\SalesInvoiceController')->middleware('auth');  
+       Route::resource('invoices', 'Bar\POS\SalesInvoiceController')->middleware('auth');
 
 
-    
+
         Route::resource('invoice', 'Bar\POS\InvoiceController')->middleware('auth');
         Route::resource('client', 'Bar\POS\ClientController')->middleware('auth');
 
         Route::resource('profoma_invoice', 'Bar\POS\ProfomaInvoiceController')->middleware('auth');
         Route::get('convert_to_invoice/{id}', 'Bar\POS\ProfomaInvoiceController@convert_to_invoice')->name('invoice.convert_to_invoice')->middleware('auth');
         Route::any('debtors_report', 'POS\InvoiceController@debtors_report')->middleware('auth');
-        
+
         Route::get('findInvPrice', 'POS\InvoiceController@findPrice')->middleware('auth');
         Route::get('findInvQuantity', 'POS\InvoiceController@findQuantity');
         Route::get('invModal', 'POS\InvoiceController@discountModal')->middleware('auth');
@@ -898,7 +902,7 @@ Route::group(['prefix' => 'payroll'], function () {
     Route::post('save_salary_details', array('as' => 'save_salary_details', 'uses' => 'Payroll\ManageSalaryController@save_salary_details'));
     Route::get('employee_salary_list', array('as' => 'employee_salary_list', 'uses' => 'Payroll\ManageSalaryController@employee_salary_list'));
 
-    //Route::post('make_payment/store{user_id}{departments_id}{payment_month}', 'Payroll\MakePaymentsController@store')->name('make_payment.store'); 
+    //Route::post('make_payment/store{user_id}{departments_id}{payment_month}', 'Payroll\MakePaymentsController@store')->name('make_payment.store');
 
 });
 
@@ -922,7 +926,7 @@ Route::get('training_reject/{id}', 'Training\TrainingController@reject')->name('
 //route for reports
 Route::group(['prefix' => 'accounting'], function () {
 
-    //Route::any('trial_balance', 'accounting\AccountingController@trial_balance');    
+    //Route::any('trial_balance', 'accounting\AccountingController@trial_balance');
     Route::any('ledger', 'accounting\AccountingController@ledger');
     Route::any('journal', 'accounting\AccountingController@journal');
     Route::get('add_journal_item', 'accounting\AccountingController@add_item')->middleware('auth');
@@ -999,15 +1003,15 @@ Route::group(['prefix' => 'bar'], function () {
     Route::group(['prefix' => 'purchases'], function () {
         Route::resource('bar_pos_supplier', 'Bar\POS\SupplierController')->middleware('auth');
         Route::resource('bar_items', 'Bar\POS\ItemsController')->middleware('auth');
-        
+
         //Route::get('bar_batch_items', 'Bar\POS\ItemsController@batch_items')
         //->name('bar_batch_items.get_purchase_order_tracking')->middleware('auth');
-        
-        
+
+
         Route::resource('purchase_order_tracking', 'Bar\POS\PurchaseOrderTrackingController');
-        
+
         Route::resource('clearing_tracking', 'Bar\POS\ClearingTrackingController');
-      
+
 
         Route::resource('category', 'Bar\POS\CategoryController')->middleware('auth');
         Route::post('item_import', 'Bar\POS\ImportItemsController@import')->name('bar_item.import');
@@ -1024,7 +1028,7 @@ Route::group(['prefix' => 'bar'], function () {
 
         Route::get('bar_purchase_requisition', 'Bar\POS\PurchaseController@purchase_requisition')->name('bar_purchase.requisition')->middleware('auth');
         Route::get('bar_purchase_quotation', 'Bar\POS\PurchaseController@purchase_order')->name('bar_purchase.order')->middleware('auth');
-        
+
         Route::resource('bar_purchase', 'Bar\POS\PurchaseController')->middleware('auth');
 
         Route::get('supplier/invoice', 'Bar\POS\PurchaseController@supplier_invoice')->name('supplier_invoice')->middleware('auth');
@@ -1044,11 +1048,11 @@ Route::group(['prefix' => 'bar'], function () {
         Route::get('supplier/agent_payment/{reference_no}', 'Bar\POS\PurchaseController@supplier_agent_payment')
             ->name('payment.clearing_agent')
             ->middleware('auth');
-        
+
         Route::post('supplier/agent_payment/{reference_no}', 'Bar\POS\PurchaseController@process_clearing_payment')
             ->name('process.clearing_payment')
             ->middleware('auth');
-            
+
         Route::get('supplier/agent_payment/pdf/{reference_no}/{id}', 'Bar\POS\PurchaseController@download_clearing_payment_pdf')
             ->name('download.clearing_payment_pdf')
             ->middleware('auth');
@@ -1070,7 +1074,7 @@ Route::group(['prefix' => 'bar'], function () {
        Route::get('clearing/tracking/{reference_no}', 'Bar\POS\PurchaseController@clearing_tracking_reference')
                 ->name('clearing.tracking')
                 ->middleware('auth');
-    
+
         Route::get('clearing/tracking/{reference_no}/download', 'Bar\POS\PurchaseController@download_clearing_tracking_pdf')
                 ->name('clearing.tracking.download')
                 ->middleware('auth');
@@ -1097,21 +1101,21 @@ Route::group(['prefix' => 'bar'], function () {
         Route::get('bar_purchase_second_disapproval/{id}', 'Bar\POS\PurchaseController@second_disapproval')->name('bar_purchase.second_disapproval')->middleware('auth');
         Route::get('bar_purchase_final_disapproval/{id}', 'Bar\POS\PurchaseController@final_disapproval')->name('bar_purchase.final_disapproval')->middleware('auth');
         Route::post('bar_grn', 'Bar\POS\PurchaseController@grn')->name('bar_purchase.grn')->middleware('auth');
-        
+
          Route::post('bar_purchase_supplier_invoice', 'Bar\POS\PurchaseController@purchase_supplier_invoice')->name('bar_purchase.supplier_invoice')->middleware('auth');
-        
+
         Route::get('bar_purchase_supplier_invoice_modal/{reference_no}', 'Bar\POS\PurchaseController@supplier_invoice_modal_show')->name('bar_purchase.supplier_invoice_modal')->middleware('auth');
-        
-        
+
+
         Route::post('purchase_costing', 'Bar\POS\PurchaseController@store_costing_items_batches')->name('bar_purchase.costing')->middleware('auth');
-        
+
         Route::get('bar_issue_supplier/{id}', 'Bar\POS\PurchaseController@issue')->name('bar_purchase.issue')->middleware('auth');
         Route::post('bar_save_order', 'Bar\POS\PurchaseController@save_order')->name('bar_purchase.save_order')->middleware('auth');
         Route::post('bar_save_supplier', 'Bar\POS\PurchaseController@save_supplier')->name('bar_purchase.save_supplier')->middleware('auth');
         Route::get('bar_confirm_order/{id}', 'Bar\POS\PurchaseController@confirm_order')->name('bar_purchase.confirm_order')->middleware('auth');
-        
+
         Route::put('bar_confirm_order_store/{id}', 'Bar\POS\PurchaseController@confirm_order_store')->name('bar_purchase.confirm_order_store')->middleware('auth');
-        
+
         Route::get('bar_order_pdfview', array('as' => 'bar_order_pdfview', 'uses' => 'Bar\POS\PurchaseController@order_pdfview'))->middleware('auth');
         Route::get('bar_issue_pdfview', array('as' => 'bar_issue_pdfview', 'uses' => 'Bar\POS\PurchaseController@issue_pdfview'))->middleware('auth');
 
@@ -1152,16 +1156,18 @@ Route::group(['prefix' => 'bar'], function () {
     Route::group(['prefix' => 'sales'], function () {
 
         Route::resource('bar_pos_client', 'Bar\POS\ClientController')->middleware('auth');
-        
+
+        Route::resource('sales-quotations', 'POS\SaleQuotationController')->middleware('auth');
+
         Route::resource('agents', 'Bar\POS\AgentController')->middleware('auth');
-        
+
         Route::any('debtors_report', 'Bar\POS\InvoiceController@debtors_report')->middleware('auth');
-        
+
         Route::resource('bar_profoma_invoice', 'Bar\POS\ProfomaInvoiceController')->middleware('auth');
-        
-        
+
+
         Route::resource('bar_invoice', 'Bar\POS\InvoiceController')->middleware('auth');
-        
+
        // Route::get('credibility', 'Bar\POS\InvoiceController@customer_credibility')->middleware('auth');
 
         Route::get('credibility', 'Bar\POS\InvoicePaymentController@credibility_index')->middleware('auth')->name('customer_credibilities.credibility_index');
@@ -1172,9 +1178,9 @@ Route::group(['prefix' => 'bar'], function () {
         Route::delete('credibility/{customerCredibility}', 'Bar\POS\InvoicePaymentController@credibility_destroy')->middleware('auth')->name('customer_credibilities.credibility_destroy');
 
         Route::get('findInvPrice', 'Bar\POS\InvoiceController@findPrice')->middleware('auth');
-        
+
         Route::get('findStoreSales', 'Bar\POS\InvoiceController@findStoreSales')->middleware('auth');
-        
+
         Route::get('findInvQuantity', 'Bar\POS\InvoiceController@findQuantity');
         Route::get('invModal', 'Bar\POS\InvoiceController@discountModal')->middleware('auth');
         Route::get('approve_purchase/{id}', 'Bar\POS\InvoiceController@approve')->name('bar_invoice.approve')->middleware('auth');
@@ -1300,7 +1306,7 @@ Route::resource('location', 'Inventory\LocationController');
 Route::prefix('inventory')->name('inventory.')->group(function () {
     Route::resource('adjustments', 'Inventory\InventoryAdjustmentController');
     Route::get('adjustments-modal', 'Inventory\InventoryAdjustmentController@getAdjustmentModal')->name('adjustments.modal');
-    
+
     Route::get('discounts', 'discounts\DiscountController@index')->name('discounts.index');
     Route::post('discounts', 'discounts\DiscountController@store')->name('discounts.store');
     Route::get('discounts/{id}/edit', 'discounts\DiscountController@edit')->name('discounts.edit');
@@ -1443,20 +1449,20 @@ Route::group(['prefix' => 'reports'], function () {
     });
 
     Route::group(['prefix' => 'section'], function () {
-        
-        
+
+
         Route::any('sales_report', 'Facility\InvoiceController@section_report')->name('section.sales_report')->middleware('auth');
-        
-        
-        
+
+
+
         Route::any('realtime_stock_report', 'Bar\POS\GoodIssueController@realtime_stock_report')->name('realtime_stock_report')->middleware('auth');
-        
+
         Route::any('sections_report', 'Facility\InvoiceController@all_sections_report')->name('all_sections_report')->middleware('auth');
         Route::any('sale_report', 'restaurant\OrderController@all_sale_report')->name('all_sale_report')->middleware('auth');
-        
+
         Route::any('products_report', 'Bar\POS\ItemsController@products_report')->name('products_report')->middleware('auth');
 
-        
+
         Route::get('viewModal', 'Facility\InvoiceController@discountModal')->middleware('auth');
     });
 
@@ -1484,3 +1490,8 @@ Route::post("send-email", [MailerController::class, "composeEmail"])->name("send
 Route::any('/{page?}', function () {
     return View::make('error-404');
 })->where('page', '.*');
+
+
+// mwandobo routes
+
+

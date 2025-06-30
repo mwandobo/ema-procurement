@@ -1,0 +1,2 @@
+side bar is aside2.blade.php
+i have new route called v2 where all my routes will be there

@@ -19,7 +19,7 @@ class CreateAdvanceSalariesTable extends Migration
             $table->string('advance_amount');
             $table->string('deduct_month');
             $table->text('reason')->nullable();
-            $table->date('request_date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('request_date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('status')->comment('0 =pending,1=accpect,2 = reject and 3 = paid');
             $table->integer('approve_by')->nullable();
             $table->integer('added_by');

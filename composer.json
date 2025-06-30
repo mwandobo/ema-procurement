@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.1",
         "barryvdh/laravel-dompdf": "^1.0",
         "barryvdh/laravel-ide-helper": "v2.10.0",
         "brian2694/laravel-toastr": "^5.57",
@@ -23,7 +23,10 @@
         "league/oauth2-server": "^8.3",
         "livewire/livewire": "^2.10",
         "maatwebsite/excel": "^3.1.0",
+        "nette/schema": "^1.3",
+        "nette/utils": "^4.0",
         "phpmailer/phpmailer": "^6.6",
+        "phpspec/prophecy": "^1.17",
         "ramsey/uuid": "^4.2",
         "shipu/watchable": "dev-master",
         "simplesoftwareio/simple-qrcode": "~4",
@@ -32,8 +35,7 @@
         "spatie/laravel-sluggable": "^2.6",
         "storewid/pesapal": "^1.0",
         "yajra/laravel-datatables-oracle": "^9.19"
-    },
-    "require-dev": {
+    },    "require-dev": {
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
@@ -49,7 +51,7 @@
         },
         "files": [
             "app/helpers.php"
-            
+
         ]
     },
     "autoload-dev": {
@@ -78,6 +80,9 @@
         }
     },
     "config": {
+        "platform": {
+            "php": "8.1.32"
+        },
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true

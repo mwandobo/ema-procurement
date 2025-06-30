@@ -1,10 +1,11 @@
 <?php
 
 namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
-use App\Role;
-use App\Permission;
-use App\User;
+use App\Models\Role;
+use App\Models\Permission;
+use App\Models\User;
 
 class UserRoleSeeder extends Seeder
 {
@@ -14,28 +15,29 @@ class UserRoleSeeder extends Seeder
      * @return void
      */
     public function run()
-    { 
-        //
-        $user = User::where('email','admin@gmail.com')->first();
+    {
+        // Find user by email
+        $user = User::where('email', 'admin@gmail.com')->first();
 
-        
+        if (!$user) {
+            $this->command->error('Admin user not found.');
+            return;
+        }
 
-        $permission = Permission::all();
+        // Fetch all permissions
+        $permissions = Permission::all();
 
-        $permission = $permission->toArray();
-        //dd($permission);
-       
-        $role = new Role;
-        $role->slug  = 'superAdmin';
-        $role->save();
-        
-        
-         $role->refreshPermissions($permission);
+        // Create or fetch existing role
+        $role = Role::firstOrCreate(['slug' => 'superAdmin']);
 
-       
-        $user->roles()->attach($role->id);
+        // Attach all permissions to the role
+        if (method_exists($role, 'refreshPermissions')) {
+            $role->refreshPermissions($permissions->pluck('id')->toArray());
+        } else {
+            $role->permissions()->syncWithoutDetaching($permissions->pluck('id')->toArray());
+        }
 
-
-
+        // Attach role to user (if not already attached)
+        $user->roles()->syncWithoutDetaching([$role->id]);
     }
 }

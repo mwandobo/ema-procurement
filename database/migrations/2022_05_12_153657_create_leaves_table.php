@@ -23,7 +23,7 @@ class CreateLeavesTable extends Migration
             $table->date('leave_start_date');
             $table->date('leave_end_date')->nullable();
             $table->integer('application_status')->comment('1=pending,2=accepted 3=rejected');
-            $table->date('application_date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('application_date')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->text('attachment')->nullable();
             $table->text('comments')->nullable();
             $table->integer('approve_by')->nullable();

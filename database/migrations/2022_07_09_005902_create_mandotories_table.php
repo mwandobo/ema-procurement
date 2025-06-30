@@ -13,19 +13,22 @@ class CreateMandotoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('mandotories', function (Blueprint $table) {
-            $table->id();
+        if(!Schema::hasTable('mandotories')){
+            Schema::create('mandotories', function (Blueprint $table) {
+                $table->id();
 
-            $table->string('incorporationCertificate');
-            $table->string('tinCertificate');
-            $table->string('businessLicense');
-            $table->string('organizationProfile');
-            $table->string('membership');
-            $table->text('infoRelevant');
-            $table->text('reasons');
+                $table->string('incorporationCertificate');
+                $table->string('tinCertificate');
+                $table->string('businessLicense');
+                $table->string('organizationProfile');
+                $table->string('membership');
+                $table->text('infoRelevant');
+                $table->text('reasons');
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+            });
+        }
+
     }
 
     /**

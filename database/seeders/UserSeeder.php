@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-
 use App\Models\User;
 
 class UserSeeder extends Seeder
@@ -17,21 +16,24 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        //
         $data = [
             [
-            'name' => 'superadmin',
-            'last_ip' => '0',
-            'last_login' => now(),
-            'email' => 'admin@gmail.com',
-            'email_verified_at' => now(),
-            'password' => Hash::make('password'),
-            'remember_token' => Str::random(10),
-            'status' => '1'
+                'name' => 'superadmin',
+                'last_ip' => '0',
+                'last_login' => now(),
+                'email' => 'admin@gmail.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+                'remember_token' => Str::random(10),
+                'status' => '1',
             ]
         ];
-foreach ($data as $row) {
-    User::updateOrCreate($row);
-}
+
+        foreach ($data as $row) {
+            User::updateOrCreate(
+                ['email' => $row['email']], // lookup condition
+                $row // fields to insert or update
+            );
+        }
     }
 }

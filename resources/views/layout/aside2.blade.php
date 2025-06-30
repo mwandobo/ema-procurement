@@ -107,10 +107,10 @@
 
                     </a>
                 </li>
-                
-                
+
+
                 <li class="nav-item">
-                  <a class="nav-link {{ (request()->is('pos/sales/agents/*')) ? 'active' : '' }}" 
+                  <a class="nav-link {{ (request()->is('pos/sales/agents/*')) ? 'active' : '' }}"
                       href="{{ route('agents.index') }}">
                       <i class="icon-spinner10"></i>
                       <span> Agents</span>
@@ -120,7 +120,7 @@
                 @endcan
 
 
-                
+
                 @can('view-bar')
 
                 <li class="nav-item nav-item-submenu">
@@ -137,7 +137,7 @@
                                 href="{{url('assign_device')}}"><i></i></i>Assign Device</a></li>
 
                         <li class="nav-item"><a class="nav-link {{ (request()->is('device_list/*')) ? 'active' : ''  }}"
-                                href="{{url('device_list')}}"><i></i></i> Device List</a></li>        
+                                href="{{url('device_list')}}"><i></i></i> Device List</a></li>
 
                         <li class="nav-item"><a class="nav-link {{ (request()->is('tracking/*')) ? 'active' : ''  }}"
                                 href="{{url('tracking')}}"><i></i></i>Tracking </a></li>
@@ -250,6 +250,8 @@
                         <i class="icon-store"></i><span>Sales</span>
                     </a>
                     <ul class="nav nav-group-sub">
+                        <li class="nav-item"><a class="nav-link {{ (request()->is('v2/sales/quotations*')) ? 'active' : ''  }}"
+                                                href="{{url('v2/sales/quotations')}}"><i></i></i>Sales Quotations</a></li>
 
                         <li class="nav-item"><a class="nav-link {{ (request()->is('pos/sales/profoma/invoice*')) ? 'active' : ''  }}"
                                 href="{{url('pos/sales/profoma/invoice')}}"><i></i></i>Profoma Invoice</a></li>

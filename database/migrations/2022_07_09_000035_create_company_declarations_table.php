@@ -13,16 +13,19 @@ class CreateCompanyDeclarationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('company_declarations', function (Blueprint $table) {
-            $table->id();
+        if(!Schema::hasTable('company_declarations')){
+            Schema::create('company_declarations', function (Blueprint $table) {
+                $table->id();
 
-            $table->string('companyName2');
-            $table->string('application');
-            $table->string('applicationDate');
-            $table->string('authorizedName');
-            $table->string('agree');
-            $table->timestamps();
-        });
+                $table->string('companyName2');
+                $table->string('application');
+                $table->string('applicationDate');
+                $table->string('authorizedName');
+                $table->string('agree');
+                $table->timestamps();
+            });
+        }
+
     }
 
     /**
