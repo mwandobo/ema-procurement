@@ -1,16 +1,8 @@
 @extends('layout.master')
 <style>
-    .p-md {
-        padding: 12px !important;
-    }
-
     .bg-items {
         background: #303252;
         color: #ffffff;
-    }
-
-    .ml-13 {
-        margin-left: -13px !important;
     }
 </style>
 
@@ -107,17 +99,12 @@
                                                             ->where('min_quantity', '<=', $row->quantity)
                                                             ->where('max_quantity', '>=', $row->quantity)
                                                             ->first();
-
-
                                                         if ($discountRule) {
                                                             $amount = ($amount *( 100 - $discountRule->value)) / 100;
                                                             $cost_price = ($item->cost_price * (100 -$discountRule->value)) / 100;
                                                         }
 
                                                         ?>
-
-
-
                                                     <tr>
                                                         <td class="">{{$i++}}</td>
                                                         <td class=""><strong class="block">({{$item->item_code}}) - {{$item->name}}</strong></td>
