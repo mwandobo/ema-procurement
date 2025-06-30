@@ -69,17 +69,13 @@
                                             @if(!@empty($salesQuotations))
                                                 @foreach ($salesQuotations as $row)
                                                     <tr class="gradeA even" role="row">
-
                                                         <td>
                                                             <a class="nav-link" id="profile-tab2"
                                                                href="{{ route('purchase.show',$row->id)}}" role="tab"
                                                                aria-selected="false">{{$row->reference_no}}</a>
                                                         </td>
-
-
                                                         <td> {{$row->client->name}}</td>
                                                         <td> {{$row->due_amount}}</td>
-
                                                         <td>
                                                             <div class="form-inline">
                                                                 @if($row->approval_1 == '')
@@ -102,6 +98,9 @@
                                                                        class="list-icons-item dropdown-toggle text-teal"
                                                                        data-toggle="dropdown"><i class="icon-cog6"></i></a>
                                                                     <div class="dropdown-menu">
+                                                                        <a class="btn btn-xs btn-info" id="profile-tab2" data-id="{{ $row->id  }}" data-type="approve"
+                                                                           onclick="model({{ $row->id  }},'costing')" href="" data-toggle="modal"
+                                                                           data-target="#appFormModal" role="tab" aria-selected="false">Approve</a>
                                                                         <a class="nav-link" id="profile-tab2"
                                                                            href="{{ route('purchase_pdfview',['download'=>'pdf','id'=>$row->id]) }}"
                                                                            role="tab" aria-selected="false">Download
@@ -185,9 +184,9 @@
                                                                 <tr>
                                                                     <th>Name</th>
                                                                     <th>Quantity</th>
+                                                                    <th>Store</th>
                                                                     <th>Price</th>
                                                                     <th>Unit</th>
-                                                                    <th>Store</th>
                                                                     <th>Action</th>
                                                                 </tr>
                                                                 </thead>
@@ -296,10 +295,106 @@
                     </div>
                 </div>
             </div>
+
+
+        <div class="modal fade show" data-backdrop="" id="appFormModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="formModal">Add Supplier</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="addClientForm" method="post" action="javascript:void(0)">
+                            @csrf
+                            <div class="modal-body">
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12 ">
+
+                                            <div class="form-group row"><label
+                                                    class="col-lg-2 col-form-label">Name</label>
+
+                                                <div class="col-lg-10">
+                                                    <input type="text" name="name" id="name"
+                                                           class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row"><label
+                                                    class="col-lg-2 col-form-label">Phone</label>
+
+                                                <div class="col-lg-10">
+                                                    <input type="text" name="phone" id="phone"
+                                                           class="form-control" placeholder="+255713000000" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row"><label
+                                                    class="col-lg-2 col-form-label">Email</label>
+                                                <div class="col-lg-10">
+                                                    <input type="email" name="email" id="email"
+                                                           class="form-control" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row"><label
+                                                    class="col-lg-2 col-form-label">Address</label>
+
+                                                <div class="col-lg-10">
+                                                <textarea name="address" id="address" class="form-control"
+                                                          required>  </textarea>
+
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row"><label
+                                                    class="col-lg-2 col-form-label">TIN</label>
+
+                                                <div class="col-lg-10">
+                                                    <input type="text" name="TIN" id="TIN"
+                                                           value="{{ isset($data) ? $data->TIN : ''}}"
+                                                           class="form-control" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row"><label
+                                                    class="col-lg-2 col-form-label">VAT</label>
+
+                                                <div class="col-lg-10">
+                                                    <input type="text" name="VAT" id="VAT"
+                                                           value="{{ isset($data) ? $data->VAT : ''}}"
+                                                           class="form-control" required>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer bg-whitesmoke br">
+                                <button type="submit" class="btn btn-primary" id="save" onclick="saveSupplier(this)"
+                                        data-dismiss="modal">Save
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
         </div>
+
+
     </section>
-
-
 @endsection
 
 @section('scripts')
@@ -399,6 +494,14 @@
                 // Quantity input
                 html += '<td><input type="number" name="quantity[]" class="form-control item_quantity" placeholder="Quantity" data-category_id="' + count + '" required /></td>';
 
+                html += '<td><select name="store_id[]" class="form-control m-b item_store" required>';
+                html += '<option value="">Select Store</option>';
+                @foreach($stores as $store)
+                    html += '<option value="{{ $store->id }}">{{ $store->name }}</option>';
+                @endforeach
+                    html += '</select></td>';
+
+
                 // Price input
                 html += '<td><input type="text" name="price[]" class="form-control item_price' + count + '" placeholder="Price" required /></td>';
 
@@ -406,12 +509,7 @@
                 html += '<td><input type="text" name="unit[]" class="form-control item_unit' + count + '" placeholder="Unit" readonly /></td>';
 
                 // Store select (example with dummy options – replace with real data)
-                html += '<td><select name="store_id[]" class="form-control m-b item_store" required>';
-                html += '<option value="">Select Store</option>';
-                @foreach($stores as $store)
-                    html += '<option value="{{ $store->id }}">{{ $store->name }}</option>';
-                @endforeach
-                    html += '</select></td>';
+
 
                 // Remove button
                 html += '<td><button type="button" name="remove" class="btn btn-danger btn-xs remove"><i class="icon-trash"></i></button></td>';
@@ -447,25 +545,28 @@
 
     <script type="text/javascript">
         function model(id, type) {
+            $('#appFormModal').modal('toggle');
 
-            $.ajax({
-                type: 'GET',
-                url: '/courier/public/discountModal/',
-                data: {
-                    'id': id,
-                    'type': type,
-                },
-                cache: false,
-                async: true,
-                success: function (data) {
-                    //alert(data);
-                    $('.modal-dialog').html(data);
-                },
-                error: function (error) {
-                    $('#appFormModal').modal('toggle');
 
-                }
-            });
+
+            // $.ajax({
+            //     type: 'GET',
+            //     url: '/courier/public/discountModal/',
+            //     data: {
+            //         'id': id,
+            //         'type': type,
+            //     },
+            //     cache: false,
+            //     async: true,
+            //     success: function (data) {
+            //         //alert(data);
+            //         $('.modal-dialog').html(data);
+            //     },
+            //     error: function (error) {
+            //         $('#appFormModal').modal('toggle');
+            //
+            //     }
+            // });
 
         }
 
