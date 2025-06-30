@@ -47,6 +47,7 @@ class SaleQuotationController extends Controller
         $data['client_id'] = $request->client_id;
 
         $saleQuotation = SaleQuotation::create($data);
+        $total_amount = 0;
 
         // Insert line items into pivot table
         foreach ($request->item_name as $index => $itemId) {
@@ -60,7 +61,12 @@ class SaleQuotationController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            $total_amount += $request->quantity[$index] * $request->price[$index];
         }
+
+        $saleQuotation->due_amount = $total_amount;
+        $saleQuotation->save();
 
         return redirect()->route('quotations.index')
             ->with('success', 'Quotation created successfully with Reference #' . $data['reference_no']);

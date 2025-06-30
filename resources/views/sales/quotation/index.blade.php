@@ -338,7 +338,7 @@
                 var id = $(this).val();
                 var sub_category_id = $(this).data('sub_category_id');
                 $.ajax({
-                    url: '{{url("sales/item")}}',
+                    url: '{{url("v2/sales/item")}}',
                     type: "GET",
                     data: {
                         id: id
