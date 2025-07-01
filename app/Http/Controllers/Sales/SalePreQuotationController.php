@@ -6,9 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Bar\POS\Client;
 use App\Models\Bar\POS\Items;
 use App\Models\Inventory\Location;
-use App\Models\POS\SaleQuotation;
-use App\Models\POS\SaleQuotationItem;
+use App\Models\Sales\SalePreQuotation;
+use App\Models\Sales\SaleQuotationItem;
 use Illuminate\Http\Request;
+use Toastr;
 
 class SalePreQuotationController extends Controller
 {
@@ -20,7 +21,7 @@ class SalePreQuotationController extends Controller
         $stores = Location::all();
         $clients = Client::all();
 
-        $salesQuotations=SaleQuotation::with('client')->get();
+        $salesQuotations=SalePreQuotation::with('client')->get();
         return view('sales.pre-quotation.index',compact('salesQuotations', 'items', 'clients', 'stores'));
     }
 
@@ -36,20 +37,20 @@ class SalePreQuotationController extends Controller
         ]);
 
         $user = auth()->user();
-        $count = SaleQuotation::count();
+        $count = SalePreQuotation::count();
         $pro = $count + 1;
 
         $data['reference_no'] = "DGC-SAL-0" . $pro;
         $data['added_by'] = $user->id;
         $data['client_id'] = $request->client_id;
 
-        $saleQuotation = SaleQuotation::create($data);
+        $saleQuotation = SalePreQuotation::create($data);
         $total_amount = 0;
 
         // Insert line items into pivot table
         foreach ($request->item_name as $index => $itemId) {
-            \DB::table('sale_quotation_item')->insert([
-                'sale_quotation_id' => $saleQuotation->id,
+            \DB::table('sale_pre_quotation_item')->insert([
+                'sale_pre_quotation_id' => $saleQuotation->id,
                 'item_id' => $itemId,
                 'store_id' => $request->store_id[$index],
                 'quantity' => $request->quantity[$index],
@@ -59,14 +60,27 @@ class SalePreQuotationController extends Controller
                 'updated_at' => now(),
             ]);
 
+
+//            $discountRule = \App\Models\Bar\POS\Discount::where('item_id', $row->item_id)
+//                ->where('min_quantity', '<=', $row->quantity)
+//                ->where('max_quantity', '>=', $row->quantity)
+//                ->first();
+//            if ($discountRule) {
+//                $amount = ($amount * (100 - $discountRule->value)) / 100;
+//                $cost_price = ($item->cost_price * (100 - $discountRule->value)) / 100;
+//            }
+
+
             $total_amount += $request->quantity[$index] * $request->price[$index];
         }
 
-        $saleQuotation->due_amount = $total_amount;
+
+
+        $saleQuotation->amount = $total_amount;
         $saleQuotation->save();
 
         return redirect()->route('pre-quotations.index')
-            ->with('success', 'Quotation created successfully with Reference #' . $data['reference_no']);
+            ->with('success', 'Pre-Quotation created successfully with Reference #' . $data['reference_no']);
     }
 
     public function findItem(Request $request)
@@ -77,11 +91,22 @@ class SalePreQuotationController extends Controller
 
     public function show($id, Request $request)
     {
-        $saleQuotation = SaleQuotation::find($id);
+        $saleQuotation = SalePreQuotation::find($id);
 
         $saleQuotationItems = SaleQuotationItem::with('store')->where('sale_quotation_id', $id)->get();
 
         return view('sales.pre-quotation.items-details', compact('saleQuotation', 'saleQuotationItems',));
+    }
+
+    public function destroy($id)
+    {
+        $saleQuotation = SalePreQuotation::find($id);
+        if($saleQuotation){
+            $saleQuotation->delete();
+        }
+
+        Toastr::success('Deleted Successfully', 'Success');
+        return redirect(url('/v2/sales/pre-quotations'));
     }
 
 }

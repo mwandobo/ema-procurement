@@ -78,7 +78,7 @@
                                                                aria-selected="false">{{$row->reference_no}}</a>
                                                         </td>
                                                         <td> {{$row->client->name}}</td>
-                                                        <td> {{$row->due_amount}}</td>
+                                                        <td> {{$row->amount}}</td>
                                                         <td>{{Carbon\Carbon::parse($row->created_at)->format('d/m/Y')}} </td>
                                                         <td>
                                                             <div class="form-inline">
@@ -87,11 +87,11 @@
                                                                     <a class="list-icons-item text-primary"
                                                                        title="Edit"
                                                                        onclick="return confirm('Are you sure?')"
-                                                                       href="{{ route('purchase.edit', $row->id)}}"><i
+                                                                       href="{{ route('pre-quotations.edit', $row->id)}}"><i
                                                                             class="icon-pencil7"></i></a>&nbsp
 
 
-                                                                    {!! Form::open(['route' => ['purchase.destroy',$row->id],
+                                                                    {!! Form::open(['route' => ['pre-quotations.destroy',$row->id],
                                                                     'method' => 'delete']) !!}
                                                                     {{ Form::button('<i class="icon-trash"></i>', ['type' => 'submit', 'style' => 'border:none;background: none;', 'class' => 'list-icons-item text-danger', 'title' => 'Delete', 'onclick' => "return confirm('Are you sure?')"]) }}
                                                                     {{ Form::close() }}
@@ -138,10 +138,10 @@
                                             <div class="row">
                                                 <div class="col-sm-12 ">
                                                     @if(isset($id))
-                                                        {{ Form::model($id, array('route' => array('quotations.update', $id), 'method' => 'PUT')) }}
+                                                        {{ Form::model($id, ['url' => "/v2/sales/pre-quotations/{$id}", 'method' => 'PUT']) }}
 
                                                     @else
-                                                        {{ Form::open(['route' => 'quotations.store']) }}
+                                                        {{ Form::open(['url' => '/v2/sales/pre-quotations', 'method' => 'POST']) }}
                                                         @method('POST')
                                                     @endif
 
