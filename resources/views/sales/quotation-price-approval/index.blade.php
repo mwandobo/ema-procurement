@@ -59,8 +59,7 @@
                                                         </td>
                                                         <td> {{$row->client->name}}</td>
                                                         <td> {{$row->due_amount}}</td>
-                                                        <td> {{   $row->due_amount}}</td>
-
+                                                        <td>{{Carbon\Carbon::parse($row->created_at)->format('d/m/Y')}} </td>
                                                     </tr>
                                                 @endforeach
                                             @endif

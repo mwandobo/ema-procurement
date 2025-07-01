@@ -54,7 +54,12 @@
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="Engine version: activate to sort column ascending"
-                                                    style="width: 161.219px;">Due Amount
+                                                    style="width: 161.219px;">Total Amount
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Engine version: activate to sort column ascending"
+                                                    style="width: 161.219px;">Date
                                                 </th>
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
@@ -74,6 +79,7 @@
                                                         </td>
                                                         <td> {{$row->client->name}}</td>
                                                         <td> {{$row->due_amount}}</td>
+                                                        <td>{{Carbon\Carbon::parse($row->created_at)->format('d/m/Y')}} </td>
                                                         <td>
                                                             <div class="form-inline">
                                                                 @if($row->approval_1 == '')
