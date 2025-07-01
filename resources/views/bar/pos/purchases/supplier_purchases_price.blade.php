@@ -59,7 +59,7 @@
                                                 </div>
 
 
-                                                <div class="form-group row">
+                                            <!--    <div class="form-group row">
 
                                                     <label class="col-lg-4 col-form-label">Purchase Payment Mode</label>
                                                     <div class="col-lg-8">
@@ -72,7 +72,7 @@
 
                                                     </div>
 
-                                                </div>
+                                                </div> -->
 
 
                                                 <br>
@@ -104,27 +104,26 @@
                                                         </div>
                                                     
 
-                                                        <label  class="col-lg-2 col-form-label" for="exchange_code">Exhange Rate</label>
+                                                    <!--    <label  class="col-lg-2 col-form-label" for="exchange_code">Exhange Rate</label>
                                                         <div class="col-lg-4">
                                                             <input type="text" name="exchange_rate"
                                                                 value="{{ isset($data) ? $data->exchange_rate : '1.00'}}"
                                                                 class="form-control" required>
 
-                                                        </div>
+                                                        </div>  -->
                                                 </div> 
 
                                                 <hr>
                                                 <button type="button" name="add222" class="btn btn-success btn-xs add"><i
-                                                        class="fas fa-plus"> Add item</i></button><br>
+                                                        class="fas fa-plus"> Item List</i></button><br>
                                                 <br>
                                                 <div class="table-responsive">
                                                     <table class="table table-bordered" id="cart">
                                                         <thead>
                                                             <tr>
-                                                                <th>Name</th>
+                                                                <th>Description</th> 
                                                                 <th>Quantity</th>
-                                                                <th>Price</th>
-                                                                <th>Tax</th>
+                                                                <th>FOB Price</th>
                                                                 <th>Total</th>
                                                                 <th>Action</th>
                                                             </tr>
@@ -150,19 +149,8 @@
                                                                 <td><input type="text" name="price[]"
                                                                         class="form-control item_price{{$i->order_no}}"
                                                                         placeholder="price" required /></td>
-                                                                <td><select name="tax_rate[]"
-                                                                        class="form-control m-b item_tax'+count{{$i->order_no}}"
-                                                                        required>
-                                                                        <option value="0">Select Tax Rate</option>
-                                                                        <option value="0">No tax
-                                                                        </option>
-                                                                        <option value="0.18">18%
-                                                                        </option>
-                                                                    </select></td>
-                                                                <input type="hidden" name="total_tax[]"
-                                                                    class="form-control item_total_tax{{$i->order_no}}'"
-                                                                    placeholder="total" required readonly
-                                                                    jAutoCalc="{quantity} * {price} * {tax_rate}" />
+                                                               
+                                                                
                                                                 <input type="hidden" name="unit[]"
                                                                     class="form-control item_unit{{$i->order_no}}" value="{{ isset($i) ? $i->unit : ''}}" required />
                                                                 <input type="hidden" name="saved_items_id[]"
@@ -170,7 +158,7 @@
                                                                 <td><input type="text" name="total_cost[]"
                                                                         class="form-control item_total{{$i->order_no}}"
                                                                         placeholder="total" required
-                                                                        readonly jAutoCalc="{quantity} * {price}" />
+                                                                        readonly jAutoCalc="{price}" />
                                                                 </td>
                                                                 <input type="hidden" name="items_id[]"
                                                                     class="form-control name_list"
@@ -187,13 +175,13 @@
 
                                                             <tr class="line_items">
                                                                 <td colspan="3"></td>
-                                                                <td ><span class="bold">Sub Total </span>: </td>
+                                                                <td ><span class="bold">Total </span>: </td>
                                                                 <td ><input type="text" name="subtotal[]"
                                                                         class="form-control item_total"
                                                                         placeholder="subtotal" required
                                                                         jAutoCalc="SUM({total_cost})" readonly></td>
                                                             </tr>
-                                                            <tr class="line_items">
+                                                            <!-- <tr class="line_items">
                                                                 <td colspan="3"></td>
                                                                 <td ><span class="bold">Tax </span>: </td>
                                                                 <td><input type="text" name="tax[]"
@@ -201,37 +189,19 @@
                                                                         placeholder="tax" required
                                                                         jAutoCalc="SUM({total_tax})" readonly>
                                                                 </td>
-                                                            </tr>
-                                                            @if(!@empty($data->discount > 0))
-                                                            <tr class="line_items">
-                                                                <td colspan="3"></td>
-                                                                <td ><span class="bold">Discount</span>: </td>
-                                                                <td ><input type="text" name="discount[]"
-                                                                        class="form-control item_discount"
-                                                                        placeholder="total" required
-                                                                        value="{{ isset($data) ? $data->discount : ''}}"
-                                                                        readonly></td>
-                                                            </tr>
-                                                            @endif
+                                                            </tr> -->
+                                                        
 
-                                                            <tr class="line_items">
+                                                            <!-- <tr class="line_items">
                                                                 <td colspan="3"></td>
-                                                                @if(!@empty($data->discount > 0))
-                                                                <td ><span class="bold">Total</span>: </td>
-                                                                <td ><input type="text" name="amount[]"
-                                                                        class="form-control item_total"
-                                                                        placeholder="total" required
-                                                                        jAutoCalc="{subtotal} + {tax} - {discount}"
-                                                                        readonly></td>
-                                                                @else
+                                                              
                                                                 <td ><span class="bold">Total</span>: </td>
                                                                 <td ><input type="text" name="amount[]"
                                                                         class="form-control item_total"
                                                                         placeholder="total" required
                                                                         jAutoCalc="{subtotal} + {tax}" readonly>
                                                                 </td>
-                                                                @endif
-                                                            </tr>
+                                                            </tr> -->
                                                         </tfoot>
                                                     </table>
                                                 </div>
