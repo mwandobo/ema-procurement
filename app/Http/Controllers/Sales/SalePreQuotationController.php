@@ -8,7 +8,6 @@ use App\Models\Bar\POS\Items;
 use App\Models\Inventory\Location;
 use App\Models\Sales\SalePreQuotation;
 use App\Models\Sales\SalePreQuotationItem;
-use App\Models\Sales\SaleQuotationItem;
 use Illuminate\Http\Request;
 use Toastr;
 
@@ -109,5 +108,4 @@ class SalePreQuotationController extends Controller
         Toastr::success('Deleted Successfully', 'Success');
         return redirect(url('/v2/sales/pre-quotations'));
     }
-
 }
