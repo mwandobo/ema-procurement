@@ -29,7 +29,6 @@ class SaleQuotationController extends Controller
         $pro = $count + 1;
 
         $salePreQuotation = SalePreQuotation::find($request->sale_pre_quotation_id);
-
         $data['reference_no'] = "DGC-SAQ-0" . $pro;
         $data['added_by'] = $user->id;
         $data['client_id'] = $salePreQuotation->client_id;
@@ -41,7 +40,6 @@ class SaleQuotationController extends Controller
             ->with('success', 'Quotation created successfully with Reference #' . $data['reference_no']);
     }
 
-
     public function show($id,)
     {
         $saleQuotation = SaleQuotation::find($id);
@@ -50,7 +48,7 @@ class SaleQuotationController extends Controller
         return view('sales.quotation.show', compact('saleQuotation', 'saleQuotationItems',));
     }
 
-    public function add_payment( Request $request, $id)
+    public function add_payment_method( Request $request, $id)
     {
         $request->validate([
             'payment_method' => 'required',
@@ -65,7 +63,10 @@ class SaleQuotationController extends Controller
            if($customer_credibility){
                $credibility_amount = $saleQuotation->amount * $customer_credibility->credibility->percentage / 100;
                $saleQuotation->credibility_amount = $credibility_amount;
+           } else {
+               $saleQuotation->needs_credibility_approved = true;
            }
+
         }else {
             $saleQuotation->credibility_amount = 0;
         }
@@ -85,5 +86,11 @@ class SaleQuotationController extends Controller
 
         return redirect()->route('quotations.show', $id)
             ->with('success', 'Payment Method created successfully for Quotation with Reference #' . $saleQuotation['reference_no']);
+    }
+
+    public function quotation_credibility_approve()
+    {
+        $salesQuotations=SaleQuotation::with('client')->latest()->get();
+        return view('sales.quotation.index',compact('salesQuotations'));
     }
 }

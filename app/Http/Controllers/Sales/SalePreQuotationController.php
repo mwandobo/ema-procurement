@@ -7,6 +7,7 @@ use App\Models\Bar\POS\Client;
 use App\Models\Bar\POS\Items;
 use App\Models\Inventory\Location;
 use App\Models\Sales\SalePreQuotation;
+use App\Models\Sales\SalePreQuotationItem;
 use App\Models\Sales\SaleQuotationItem;
 use Illuminate\Http\Request;
 use Toastr;
@@ -93,7 +94,7 @@ class SalePreQuotationController extends Controller
     {
         $saleQuotation = SalePreQuotation::find($id);
 
-        $saleQuotationItems = SaleQuotationItem::with('store')->where('sale_quotation_id', $id)->get();
+        $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $id)->get();
 
         return view('sales.pre-quotation.items-details', compact('saleQuotation', 'saleQuotationItems',));
     }

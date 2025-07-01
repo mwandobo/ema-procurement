@@ -27,11 +27,12 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'v2'], function () {
     Route::group(['middleware' => 'auth', 'prefix' => 'sales'], function () {
+        Route::get('item', 'Sales\SalePreQuotationController@findItem');
         Route::resource('pre-quotations', 'Sales\SalePreQuotationController');
         Route::resource('quotation-price-approval', 'Sales\SalePriceQuotationController');
+        Route::get('quotations/credibility-approve', 'Sales\SaleQuotationController@quotation_credibility_approve');
         Route::resource('quotations', 'Sales\SaleQuotationController');
-        Route::get('item', 'Sales\SalePreQuotationController@findItem');
-        Route::post('quotations/add-payment/{id}', 'Sales\SaleQuotationController@add_payment');
+        Route::post('quotations/add-payment/{id}', 'Sales\SaleQuotationController@add_payment_method');
         Route::post('quotations/make-payment/{id}', 'Sales\SaleQuotationController@make_payment');
     });
 });

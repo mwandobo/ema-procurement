@@ -28,13 +28,27 @@
                             @endif Payment Method
                         </button>
 
-                        @if($saleQuotation->payment_method && $saleQuotation->paid_amount <= $saleQuotation->amount )
-                        <button type="button"
-                                class="btn btn-xs btn-success"
-                                data-toggle="modal"
-                                data-target="#appForm1Modal">
-                            Make Payment
-                        </button>
+                        {{--                        @if($saleQuotation->payment_method && $saleQuotation->paid_amount <= $saleQuotation->amount  )--}}
+                        {{--                        <button type="button"--}}
+                        {{--                                class="btn btn-xs btn-success"--}}
+                        {{--                                data-toggle="modal"--}}
+                        {{--                                data-target="#appForm1Modal">--}}
+                        {{--                            Make Payment--}}
+                        {{--                        </button>--}}
+                        {{--                        @endif--}}
+
+
+                        @if($saleQuotation->payment_method && $saleQuotation->paid_amount <= $saleQuotation->amount)
+                            <button type="button"
+                                    class="btn btn-xs btn-success"
+                                    data-toggle="modal"
+                                    data-target="#appForm1Modal">
+                                Make Payment
+                            </button>
+                        @endif
+
+                        @if($saleQuotation->needs_credibility_approved && is_null($saleQuotation->credibility_approved_1))
+                            <span class="badge badge-danger"> Waiting for credibility approval </span>
                         @endif
                     </div>
                     <br>
@@ -232,7 +246,7 @@
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label">Paid Amount</label>
                                             <div class="col-lg-8">
-                                                <input type="text" class="form-control m-b" name="amount" required />
+                                                <input type="text" class="form-control m-b" name="amount" required/>
                                             </div>
                                         </div>
                                     </div>

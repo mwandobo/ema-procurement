@@ -26,10 +26,18 @@ class CreateSaleQuotationsTable extends Migration
             $table->string('payment_status')->nullable();
             $table->string('paid_amount')->nullable();
             $table->string('credibility_amount')->nullable();
+            $table->string('needs_credibility_approved')->nullable();
+            $table->string('credibility_approved_1')->nullable();
+            $table->string('credibility_approved_2')->nullable();
+            $table->unsignedBigInteger('credibility_approved_1_by')->nullable();
+            $table->unsignedBigInteger('credibility_approved_2_by')->nullable();
+
             // Add foreign key constraints (optional but recommended)
             $table->foreign('sale_pre_quotation_id')->references('id')->on('sale_pre_quotations')->onDelete('cascade');
             $table->foreign('client_id')->references('id')->on('store_pos_clients')->onDelete('set null');
             $table->foreign('added_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('credibility_approved_1_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('credibility_approved_2_by')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });
     }
