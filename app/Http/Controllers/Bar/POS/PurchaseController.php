@@ -1852,12 +1852,12 @@ class PurchaseController extends Controller
             $data['due_date'] = $request->due_date;
             //$data['location']=$request->location;
             $data['exchange_code'] = $request->exchange_code;
-            $data['exchange_rate'] = $request->exchange_rate;
+            // $data['exchange_rate'] = $request->exchange_rate;
             $data['purchase_amount'] = '1';
             $data['due_amount'] = '1';
             $data['purchase_tax'] = '1';
             $data['order_status'] = 1;
-            $data['payment_mode'] = $request->payment_mode;
+            // $data['payment_mode'] = $request->payment_mode;
             $data['added_by'] = auth()->user()->added_by;
 
             $purchase->update($data);
@@ -1868,10 +1868,10 @@ class PurchaseController extends Controller
             $nameArr = $request->item_name;
             $qtyArr = $request->quantity;
             $priceArr = $request->price;
-            $rateArr = $request->tax_rate;
+            // $rateArr = $request->tax_rate;
             $unitArr = $request->unit;
             $costArr = str_replace(",", "", $request->total_cost);
-            $taxArr =  str_replace(",", "", $request->total_tax);
+            // $taxArr =  str_replace(",", "", $request->total_tax);
             $remArr = $request->removed_id;
             $expArr = $request->items_id;
             $savedArr = $request->item_name;
@@ -1893,10 +1893,12 @@ class PurchaseController extends Controller
             if (!empty($nameArr)) {
                 for ($i = 0; $i < count($nameArr); $i++) {
                     if (!empty($nameArr[$i])) {
-                        $cost['purchase_amount_base'] += $costArr[$i];
-                        $cost['purchase_amount'] += ( $costArr[$i] * $purchase->exchange_rate );
-                        $cost['purchase_tax_base'] +=  $taxArr[$i];
-                        $cost['purchase_tax'] += ( $taxArr[$i] * $purchase->exchange_rate );
+                        // $cost['purchase_amount_base'] += $costArr[$i];
+                        // $cost['purchase_amount'] += ( $costArr[$i] * $purchase->exchange_rate );
+                        // $cost['purchase_tax_base'] +=  $taxArr[$i];
+                        // $cost['purchase_tax'] += ( $taxArr[$i] * $purchase->exchange_rate );
+
+                        $cost['purchase_fob_price'] += $priceArr[$i];
 
                         $cost['due_quantity'] =  $cost['total_quantity'];
 
@@ -1904,13 +1906,14 @@ class PurchaseController extends Controller
                             'item_name' => $nameArr[$i],
                             'quantity' =>   $qtyArr[$i],
                             'due_quantity' =>   $qtyArr[$i],
-                            'tax_rate' =>  $rateArr[$i],
+                            'tax_rate' =>  0,
                             'unit' => $unitArr[$i],
-                            'price' =>  $priceArr[$i],
-                            'total_cost_base' =>  $costArr[$i],
-                            'total_cost' =>  $costArr[$i] * $purchase->exchange_rate,
-                            'total_tax_base' =>   $taxArr[$i],
-                            'total_tax' =>   $taxArr[$i] * $purchase->exchange_rate,
+                            'price' =>  $priceArr[$i] / $qtyArr[$i],
+                            'fob_price' =>  $priceArr[$i],
+                            'total_cost_base' => 0,
+                            'total_cost' => 0,
+                            'total_tax_base' => 0,
+                            'total_tax' => 0,
                             'items_id' => $savedArr[$i],
                             'order_no' => $i,
                             'added_by' => auth()->user()->added_by,
@@ -1924,14 +1927,15 @@ class PurchaseController extends Controller
                         }
                     }
                 }
-                $cost['due_amount'] =  $cost['purchase_amount'] + $cost['purchase_tax'];
+                // $cost['due_amount'] =  $cost['purchase_amount'] + $cost['purchase_tax'];
+                // $cost['on_value_percentage'] =  ;
                 $cost['due_quantity'] =  $cost['total_quantity'];
                 Purchase::where('id', $id)->update($cost);
             }
 
 
 
-
+                
             if (!empty($purchase)) {
 
                 $activity = Activity::create(
@@ -1949,8 +1953,8 @@ class PurchaseController extends Controller
             return redirect(route('bar_purchase.index'));
 
             // return redirect(route('bar_purchase.order'));
-
-
+       
+       
     }
 
 
