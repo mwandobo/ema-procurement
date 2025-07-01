@@ -174,12 +174,13 @@
                                                             @endif
 
                                                             <tr class="line_items">
-                                                                <td colspan="3"></td>
+                                                                <td colspan="2"></td>
                                                                 <td ><span class="bold">Total </span>: </td>
                                                                 <td ><input type="text" name="subtotal[]"
                                                                         class="form-control item_total"
                                                                         placeholder="subtotal" required
                                                                         jAutoCalc="SUM({total_cost})" readonly></td>
+                                                                <td></td>        
                                                             </tr>
                                                             <!-- <tr class="line_items">
                                                                 <td colspan="3"></td>
