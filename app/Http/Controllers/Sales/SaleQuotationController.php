@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bar\POS\CustomerCredibilityClient;
 use App\Models\Sales\SalePreQuotation;
 use App\Models\Sales\SalePreQuotationItem;
 use App\Models\Sales\SaleQuotation;
@@ -12,7 +13,7 @@ class SaleQuotationController extends Controller
 {
     public function index()
     {
-        $salesQuotations=SaleQuotation::with('client')->get();
+        $salesQuotations=SaleQuotation::with('client')->latest()->get();
         return view('sales.quotation.index',compact('salesQuotations'));
     }
 
@@ -34,7 +35,6 @@ class SaleQuotationController extends Controller
         $data['client_id'] = $salePreQuotation->client_id;
         $data['amount'] = $salePreQuotation->amount;
         $data['sale_pre_quotation_id'] = $request->sale_pre_quotation_id;
-
         $saleQuotation = SaleQuotation::create($data);
 
         return redirect()->route('quotations.index')
@@ -52,8 +52,35 @@ class SaleQuotationController extends Controller
 
     public function add_payment( Request $request, $id)
     {
+        $request->validate([
+            'payment_method' => 'required',
+        ]);
+
         $saleQuotation = SaleQuotation::find($id);
+        $payment_method = $request->payment_method;
         $saleQuotation->payment_method = $request->payment_method;
+
+        if($payment_method === 'Credit'){
+           $customer_credibility =  CustomerCredibilityClient::with('credibility')->where('client_id', $saleQuotation->client_id)->first();
+           if($customer_credibility){
+               $credibility_amount = $saleQuotation->amount * $customer_credibility->credibility->percentage / 100;
+               $saleQuotation->credibility_amount = $credibility_amount;
+           }
+        }else {
+            $saleQuotation->credibility_amount = 0;
+        }
+
+        $saleQuotation->save();
+
+        return redirect()->route('quotations.show', $id)
+            ->with('success', 'Payment Method created successfully for Quotation with Reference #' . $saleQuotation['reference_no']);
+    }
+
+    public function make_payment( Request $request, $id)
+    {
+        $saleQuotation = SaleQuotation::find($id);
+        $saleQuotation->paid_amount += $request->amount;
+
         $saleQuotation->save();
 
         return redirect()->route('quotations.show', $id)

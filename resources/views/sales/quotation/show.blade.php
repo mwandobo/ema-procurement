@@ -27,6 +27,15 @@
                                 Add
                             @endif Payment Method
                         </button>
+
+                        @if($saleQuotation->payment_method && $saleQuotation->paid_amount <= $saleQuotation->amount )
+                        <button type="button"
+                                class="btn btn-xs btn-success"
+                                data-toggle="modal"
+                                data-target="#appForm1Modal">
+                            Make Payment
+                        </button>
+                        @endif
                     </div>
                     <br>
                     <div class="card">
@@ -43,23 +52,27 @@
                                             <img class="pl-lg" style="width: 133px;height: 120px;"
                                                  src="{{url('images')}}/{{$settings->site_logo}}">
                                         </div>
-
                                         <div class="col-lg-3 col-xs-3">
-
                                         </div>
-
                                         <div class="col-lg-3 col-xs-3">
                                             <h5 class=mb0">REF NO : {{$saleQuotation->reference_no}}</h5>
                                             Sale Date
                                             : {{Carbon\Carbon::parse($saleQuotation->purchase_date)->format('d/m/Y')}}
-                                            <br>Due Date
-                                            : {{Carbon\Carbon::parse($saleQuotation->due_date)->format('d/m/Y')}}
                                             <br>Payment Method
                                             : {{ $saleQuotation->payment_method}}
+                                            <br>Amount to Be Paid
+                                            : {{ $saleQuotation->amount}}
+                                            <br>Credit Amount
+                                            : {{ $saleQuotation->credibility_amount ?? 0}}
+                                            <br>Cash Amount
+                                            : {{ $saleQuotation->amount - $saleQuotation->credibility_amount ?? 0}}
+                                            <br>Paid Amount
+                                            : {{ $saleQuotation->paid_amount ?? 0}}
+                                            <br>Remaining Amount
+                                            : {{ $saleQuotation->amount - $saleQuotation->paid_amount }}
                                         </div>
                                     </div>
                                     <br>
-
                                     <div class="row mb-lg">
                                         <div class="col-lg-6 col-xs-6">
                                             <h5 class="p-md bg-items mr-15">Our Info:</h5>
@@ -80,8 +93,6 @@
                                                 href="mailto:{{$saleQuotation->client->email}}">{{$saleQuotation->client->email}}</a>
                                             <br>TIN
                                             : {{!empty($saleQuotation->client->TIN)? $saleQuotation->client->TIN : ''}}
-
-
                                         </div>
                                     </div>
 
@@ -157,6 +168,8 @@
         </div>
     </section>
 
+
+
     <div class="modal fade show" data-backdrop="" id="appFormModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-dialog" role="document">
@@ -167,8 +180,6 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-
-
                     <form method="POST" action="{{ url('v2/sales/quotations/add-payment', $saleQuotation->id ) }}">
                         @csrf
                         <div class="modal-body">
@@ -183,6 +194,45 @@
                                                     <option value="Credit">Credit</option>
                                                     <option value="Cash">Cash</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="submit" class="btn btn-primary">
+                                Save
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade show" data-backdrop="" id="appForm1Modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="formModal">Make Payment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="POST" action="{{ url('v2/sales/quotations/make-payment', $saleQuotation->id ) }}">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12 ">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Paid Amount</label>
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control m-b" name="amount" required />
                                             </div>
                                         </div>
                                     </div>
