@@ -6,4 +6,10 @@ Purchase controller is from Bar/Purchase
 
 use App\Models\Inventory\Location;
 
+// Raja commited
+1. Added function in Purchase controller is from Bar/Purchase called confirm_order_store
+
+2. Added 2 columns in store_pos_purchase_items table
+
+3. Edit view in " bar.pos.purchases.supplier_purchases_price "
 
