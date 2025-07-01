@@ -17,11 +17,17 @@ class CreateSaleQuotationsTable extends Migration
         Schema::create('sale_quotations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id')->nullable();
+            $table->unsignedBigInteger('sale_pre_quotation_id')->nullable();
             $table->string('reference_no')->unique();
             $table->unsignedBigInteger('added_by')->nullable();
             $table->string('status')->nullable();
-            $table->integer('due_amount')->nullable();
+            $table->string('amount')->nullable();
+            $table->string('payment_method')->nullable();
+            $table->string('payment_status')->nullable();
+            $table->string('paid_amount')->nullable();
+            $table->string('credibility_amount')->nullable();
             // Add foreign key constraints (optional but recommended)
+            $table->foreign('sale_pre_quotation_id')->references('id')->on('sale_pre_quotations')->onDelete('cascade');
             $table->foreign('client_id')->references('id')->on('store_pos_clients')->onDelete('set null');
             $table->foreign('added_by')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();

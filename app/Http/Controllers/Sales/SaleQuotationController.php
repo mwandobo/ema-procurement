@@ -3,85 +3,60 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Http\Controllers\Controller;
-use App\Models\Bar\POS\Client;
-use App\Models\Bar\POS\Items;
-use App\Models\Inventory\Location;
-use App\Models\POS\SaleQuotation;
-use App\Models\POS\SaleQuotationItem;
+use App\Models\Sales\SalePreQuotation;
+use App\Models\Sales\SalePreQuotationItem;
+use App\Models\Sales\SaleQuotation;
 use Illuminate\Http\Request;
 
 class SaleQuotationController extends Controller
 {
-
     public function index()
     {
-        //
-        $items = Items::all();
-        $stores = Location::all();
-        $clients = Client::all();
-
         $salesQuotations=SaleQuotation::with('client')->get();
-        return view('sales.quotation.index',compact('salesQuotations', 'items', 'clients', 'stores'));
+        return view('sales.quotation.index',compact('salesQuotations'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'client_id' => 'required|exists:store_pos_clients,id',
-            'item_name' => 'required|array',
-            'quantity' => 'required|array',
-            'price' => 'required|array',
-            'unit' => 'required|array',
-            'store_id' => 'required|array',
+            'item_decisions' => 'required|array',
+            'sale_pre_quotation_id' => 'required'
         ]);
 
         $user = auth()->user();
         $count = SaleQuotation::count();
         $pro = $count + 1;
 
-        $data['reference_no'] = "DGC-SAL-0" . $pro;
+        $salePreQuotation = SalePreQuotation::find($request->sale_pre_quotation_id);
+
+        $data['reference_no'] = "DGC-SAQ-0" . $pro;
         $data['added_by'] = $user->id;
-        $data['client_id'] = $request->client_id;
+        $data['client_id'] = $salePreQuotation->client_id;
+        $data['amount'] = $salePreQuotation->amount;
+        $data['sale_pre_quotation_id'] = $request->sale_pre_quotation_id;
 
         $saleQuotation = SaleQuotation::create($data);
-        $total_amount = 0;
-
-        // Insert line items into pivot table
-        foreach ($request->item_name as $index => $itemId) {
-            \DB::table('sale_quotation_item')->insert([
-                'sale_quotation_id' => $saleQuotation->id,
-                'item_id' => $itemId,
-                'store_id' => $request->store_id[$index],
-                'quantity' => $request->quantity[$index],
-                'price' => $request->price[$index],
-                'unit' => $request->unit[$index],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            $total_amount += $request->quantity[$index] * $request->price[$index];
-        }
-
-        $saleQuotation->due_amount = $total_amount;
-        $saleQuotation->save();
 
         return redirect()->route('quotations.index')
             ->with('success', 'Quotation created successfully with Reference #' . $data['reference_no']);
     }
 
-    public function findItem(Request $request)
-    {
-        $item = Items::where('id', $request->id)->get();
-        return response()->json($item);
-    }
 
-    public function show($id, Request $request)
+    public function show($id,)
     {
         $saleQuotation = SaleQuotation::find($id);
-
-        $saleQuotationItems = SaleQuotationItem::with('store')->where('sale_quotation_id', $id)->get();
-
-        return view('sales.quotation.items-details', compact('saleQuotation', 'saleQuotationItems',));
+        $salePreQuotation = SalePreQuotation::with('client')->find($saleQuotation->sale_pre_quotation_id);
+        $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $salePreQuotation->id)->get();
+        return view('sales.quotation.show', compact('saleQuotation', 'saleQuotationItems',));
     }
 
+    public function add_payment( Request $request, $id)
+    {
+        $saleQuotation = SaleQuotation::find($id);
+        $saleQuotation->payment_method = $request->payment_method;
+        $saleQuotation->save();
+
+        return redirect()->route('quotations.show', $id)
+            ->with('success', 'Payment Method created successfully for Quotation with Reference #' . $saleQuotation['reference_no']);
+    }
 }

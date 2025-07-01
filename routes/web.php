@@ -30,7 +30,8 @@ Route::group(['prefix' => 'v2'], function () {
         Route::resource('pre-quotations', 'Sales\SalePreQuotationController');
         Route::resource('quotation-price-approval', 'Sales\SalePriceQuotationController');
         Route::resource('quotations', 'Sales\SaleQuotationController');
-        Route::get('item', 'Sales\SaleQuotationController@findItem');
+        Route::get('item', 'Sales\SalePreQuotationController@findItem');
+        Route::post('quotations/add-payment/{id}', 'Sales\SaleQuotationController@add_payment');
     });
 });
 

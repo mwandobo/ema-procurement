@@ -25,8 +25,8 @@
 
                         <a class="btn btn-xs btn-primary" href="#" data-bs-toggle="modal"
                             data-bs-target="#paymentModal" title="">Pay Purchase</a>
-                            
-                        <!-- 
+
+                        <!--
                         <a class="btn btn-xs btn-primary" href="#" data-bs-toggle="modal"
                             data-bs-target="#goodreceiveModal" title="">Good Receive</a> -->
 
@@ -42,16 +42,16 @@
                                 Good Receive
                             </a>
                         @endif
-                        
+
                          <a class="btn btn-xs btn-info " data-placement="top3"
                           href="{{ route('purchase_order_tracking.show',$invoice_main->reference_no)}}"
                           title="Purchase Shipment Tracking">Shipment Tracking </a>
-                         
+
                          {{--<a class="btn btn-xs btn-info " data-placement="top3"
                           href="{{ route('clearing_tracking.show',$invoice_main->reference_no)}}"
                            title="Purchase Shipment Tracking"> Clearing Tracking </a>--}}
-                           
-                           
+
+
                           <div class="btn-group">
                               <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Clearing Tracking
@@ -62,11 +62,11 @@
                                     data-target="#app2FormModal" data-id="{{$invoice_main->id}}"
                                     href="app2FormModal">
                                     Agent</a>
-                                   
-                                  <a class="dropdown-item" 
+
+                                  <a class="dropdown-item"
                                   href="{{ route('clearing_tracking.show', $invoice_main->reference_no) }}">
                                   Tracking Activities</a>
-                                  
+
                                   <a class="dropdown-item"
                                    href="{{ route('clearing.tracking', $invoice_main->reference_no) }}">
                                    Clearing Expenses</a>
@@ -77,9 +77,9 @@
 
                           <a class="btn btn-xs btn-primary" href="{{ route('supplier_invoice_show_pdf', $invoice_main->reference_no) }}" title="Download PDF">Download PDF</a>
 
-                         
-                         
- 
+
+
+
                     </div>
 
                     <br>
@@ -90,7 +90,7 @@
 
                             <?php
                             $settings = App\Models\Setting::first();
-                            
+
                             ?>
                             <div class="tab-content" id="myTab3Content">
                                 <div class="tab-pane fade show active" id="about" role="tabpanel"
@@ -153,12 +153,12 @@
 
 
                             <?php
-                            
+
                             $sub_total = 0;
                             $gland_total = 0;
                             $tax = 0;
                             $i = 1;
-                            
+
                             ?>
 
                             <div class="table-responsive mb-lg">
@@ -181,11 +181,11 @@
                                                 $sub_total += $row->total_cost;
                                                 $gland_total += $row->total_cost + $row->total_tax;
                                                 $tax += $row->total_tax;
-                                                
+
                                                 $due = App\Models\Bar\POS\PurchaseHistory::where('purchase_id', $row->purchase_id)->where('item_id', $row->item_name)->where('type', 'Purchase Supplier Invoice')->sum('quantity');
-                                                
+
                                                 $qty = $due;
-                                                
+
                                                 ?>
                                                 <tr>
                                                     <td class="">{{ $i++ }}</td>
@@ -349,7 +349,7 @@
         <div class="modal-dialog modal-lg">
         </div>
     </div>
-    
+
      <!-- discount Modal -->
     <div class="modal fade" id="app2FormModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -424,6 +424,8 @@
             });
         }
     </script>
+
+
 <script type="text/javascript">
     function model2(id, type) {
         $.ajax({

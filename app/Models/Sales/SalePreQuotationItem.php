@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Models\POS;
+namespace App\Models\Sales;
 
 use App\Models\Inventory\Location;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
-class SaleQuotationItem extends Model
+class SalePreQuotationItem extends Model
 {
     use HasFactory;
 
-    protected $table = "sale_quotation_item";
+    protected $table = "sale_pre_quotation_item";
 
     protected $guarded = ['id'];
 

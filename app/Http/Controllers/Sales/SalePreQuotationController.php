@@ -40,7 +40,7 @@ class SalePreQuotationController extends Controller
         $count = SalePreQuotation::count();
         $pro = $count + 1;
 
-        $data['reference_no'] = "DGC-SAL-0" . $pro;
+        $data['reference_no'] = "DGC-SPQ-0" . $pro;
         $data['added_by'] = $user->id;
         $data['client_id'] = $request->client_id;
 
