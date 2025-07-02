@@ -98,9 +98,11 @@ class SaleQuotationController extends Controller
 
     public function quotation_credibility_approve_show($id)
     {
-        $saleQuotation=SaleQuotation::with('client')
-            ->where('id', $id)->first();
-        return view('sales.quotation.approved.show',compact('saleQuotation'));
+        $saleQuotation=SaleQuotation::with('client')->where('id', $id)->first();
+        $salePreQuotation = SalePreQuotation::with('client')->find($saleQuotation->sale_pre_quotation_id);
+        $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $salePreQuotation->id)->get();
+
+        return view('sales.quotation.approved.show',compact('saleQuotation', 'saleQuotationItems',));
     }
 
     public function quotation_approve(Request $request, $id, $type)
