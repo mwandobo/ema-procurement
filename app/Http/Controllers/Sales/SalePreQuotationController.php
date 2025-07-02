@@ -74,8 +74,6 @@ class SalePreQuotationController extends Controller
             $total_amount += $request->quantity[$index] * $request->price[$index];
         }
 
-
-
         $saleQuotation->amount = $total_amount;
         $saleQuotation->save();
 

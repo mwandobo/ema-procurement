@@ -7,6 +7,7 @@ use App\Models\Bar\POS\CustomerCredibilityClient;
 use App\Models\Sales\SalePreQuotation;
 use App\Models\Sales\SalePreQuotationItem;
 use App\Models\Sales\SaleQuotation;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SaleQuotationController extends Controller
@@ -81,7 +82,6 @@ class SaleQuotationController extends Controller
     {
         $saleQuotation = SaleQuotation::find($id);
         $saleQuotation->paid_amount += $request->amount;
-
         $saleQuotation->save();
 
         return redirect()->route('quotations.show', $id)
@@ -90,7 +90,45 @@ class SaleQuotationController extends Controller
 
     public function quotation_credibility_approve()
     {
-        $salesQuotations=SaleQuotation::with('client')->latest()->get();
-        return view('sales.quotation.index',compact('salesQuotations'));
+        $salesQuotations=SaleQuotation::with('client')
+            ->where('needs_credibility_approved', true)
+            ->latest()->get();
+        return view('sales.quotation.approved.index',compact('salesQuotations'));
     }
+
+    public function quotation_credibility_approve_show($id)
+    {
+        $saleQuotation=SaleQuotation::with('client')
+            ->where('id', $id)->first();
+        return view('sales.quotation.approved.show',compact('saleQuotation'));
+    }
+
+    public function quotation_approve(Request $request, $id, $type)
+    {
+
+        $saleQuotation=SaleQuotation::find($id);
+        if(!$saleQuotation){
+            return redirect('/v2/sales/quotations/credibility-approve')->with('error', 'Quotation not found');
+        }
+
+        if($type === 'approve'){
+            $request->validate([
+                'credibility' => 'required',
+            ]);
+
+            if($request->credibility > 100){
+                return redirect('/v2/sales/quotations/credibility-approve/' . $id)->with('error', 'Credibility can not be greater than 100%');
+            }
+
+            $saleQuotation->credibility_amount = $saleQuotation->amount *  $request->credibility / 100;
+        }
+
+        $user = auth()->user();
+        $saleQuotation->credibility_approved_1 = $type === 'approve' ? 1 : 2;
+        $saleQuotation->credibility_approved_1_by = $user->id;
+        $saleQuotation->credibility_approved_1_date = Carbon::now();
+        $saleQuotation->save();
+
+        return redirect('/v2/sales/quotations/credibility-approve')
+            ->with('success', 'Quotation was '. $type === 'approve' ?  'Approved' : "DisApproved ".  'Successfully, Reference #' . $saleQuotation['reference_no']);    }
 }

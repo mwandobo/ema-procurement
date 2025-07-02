@@ -31,6 +31,8 @@ Route::group(['prefix' => 'v2'], function () {
         Route::resource('pre-quotations', 'Sales\SalePreQuotationController');
         Route::resource('quotation-price-approval', 'Sales\SalePriceQuotationController');
         Route::get('quotations/credibility-approve', 'Sales\SaleQuotationController@quotation_credibility_approve');
+        Route::get('quotations/credibility-approve/{id}', 'Sales\SaleQuotationController@quotation_credibility_approve_show');
+        Route::post('quotations/credibility-approve/{id}/{type}', 'Sales\SaleQuotationController@quotation_approve');
         Route::resource('quotations', 'Sales\SaleQuotationController');
         Route::post('quotations/add-payment/{id}', 'Sales\SaleQuotationController@add_payment_method');
         Route::post('quotations/make-payment/{id}', 'Sales\SaleQuotationController@make_payment');

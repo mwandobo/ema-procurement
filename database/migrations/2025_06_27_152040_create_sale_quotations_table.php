@@ -31,6 +31,8 @@ class CreateSaleQuotationsTable extends Migration
             $table->string('credibility_approved_2')->nullable();
             $table->unsignedBigInteger('credibility_approved_1_by')->nullable();
             $table->unsignedBigInteger('credibility_approved_2_by')->nullable();
+            $table->date('credibility_approved_1_date')->nullable();
+            $table->date('credibility_approved_2_date')->nullable();
 
             // Add foreign key constraints (optional but recommended)
             $table->foreign('sale_pre_quotation_id')->references('id')->on('sale_pre_quotations')->onDelete('cascade');

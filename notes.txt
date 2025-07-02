@@ -7,3 +7,27 @@ Purchase controller is from Bar/Purchase
 use App\Models\Inventory\Location;
 
 
+        <td>
+                                                    @if($row->approval_1 == '' && $row->status == 0)
+                                                    <div class="badge badge-danger badge-shadow">Waiting For First
+                                                        Approval</div>
+                                                    @elseif($row->approval_1 != '' && $row->approval_2 == '' &&
+                                                    $row->status == 0)
+                                                    <div class="badge badge-danger badge-shadow">Waiting For Second
+                                                        Approval</div>
+                                                    @elseif($row->approval_1 != '' && $row->approval_2 != '' &&
+                                                    $row->status == 0)
+                                                    <div class="badge badge-danger badge-shadow">Waiting For Final
+                                                        Approval</div>
+                                                    @elseif($row->status == 1)
+                                                    <div class="badge badge-warning badge-shadow">Not Paid</div>
+                                                    @elseif($row->status == 2)
+                                                    <div class="badge badge-info badge-shadow">Partially Paid</div>
+                                                    @elseif($row->status == 3)
+                                                    <span class="badge badge-success badge-shadow">Fully Paid</span>
+                                                    @elseif($row->status == 4)
+                                                    <span class="badge badge-danger badge-shadow">Cancelled</span>
+
+                                                    @endif
+                                                </td>
+
