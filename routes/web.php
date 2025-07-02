@@ -36,6 +36,9 @@ Route::group(['prefix' => 'v2'], function () {
         Route::resource('quotations', 'Sales\SaleQuotationController');
         Route::post('quotations/add-payment/{id}', 'Sales\SaleQuotationController@add_payment_method');
         Route::post('quotations/make-payment/{id}', 'Sales\SaleQuotationController@make_payment');
+
+        Route::resource('orders', 'Sales\SaleOrderController');
+
     });
 });
 

@@ -18,33 +18,6 @@
                             Download PDF
                         </a>
 
-                        @if($saleQuotation->paid_amount)
-
-                        <button type="button"
-                                class="btn btn-xs btn-info"
-                                data-toggle="modal"
-                                data-target="#appFormModal">
-                            @if($saleQuotation->payment_method)
-                                Edit
-                            @else
-                                Add
-                            @endif Payment Method
-                        </button>
-                        @endif
-
-
-                        @if($saleQuotation->payment_method && $saleQuotation->paid_amount + $saleQuotation->credibility_amount  <= $saleQuotation->amount)
-                            <button type="button"
-                                    class="btn btn-xs btn-success"
-                                    data-toggle="modal"
-                                    data-target="#appForm1Modal">
-                                Make Payment
-                            </button>
-                        @endif
-
-                        @if($saleQuotation->needs_credibility_approved && is_null($saleQuotation->credibility_approved_1))
-                            <span class="badge badge-danger"> Waiting for credibility approval </span>
-                        @endif
                     </div>
                     <br>
                     <div class="card">
@@ -69,16 +42,8 @@
                                             : {{Carbon\Carbon::parse($saleQuotation->purchase_date)->format('d/m/Y')}}
                                             <br>Payment Method
                                             : {{ $saleQuotation->payment_method}}
-                                            <br>Amount to Be Paid
+                                            <br>Amount
                                             : {{ $saleQuotation->amount}}
-                                            <br>Credit Amount
-                                            : {{ $saleQuotation->credibility_amount ?? 0}}
-                                            <br>Cash Amount
-                                            : {{ $saleQuotation->amount - $saleQuotation->credibility_amount ?? 0}}
-                                            <br>Paid Amount
-                                            : {{ $saleQuotation->paid_amount ?? 0}}
-                                            <br>Remaining Amount
-                                            : {{ $saleQuotation->amount - $saleQuotation->paid_amount }}
                                         </div>
                                     </div>
                                     <br>
@@ -104,7 +69,6 @@
                                             : {{!empty($saleQuotation->client->TIN)? $saleQuotation->client->TIN : ''}}
                                         </div>
                                     </div>
-
                                     <?php
 
                                     $sub_total = 0;

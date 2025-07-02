@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sales;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bar\POS\CustomerCredibilityClient;
+use App\Models\Sales\SaleOrder;
 use App\Models\Sales\SalePreQuotation;
 use App\Models\Sales\SalePreQuotationItem;
 use App\Models\Sales\SaleQuotation;
@@ -83,9 +84,30 @@ class SaleQuotationController extends Controller
         $saleQuotation = SaleQuotation::find($id);
         $saleQuotation->paid_amount += $request->amount;
         $saleQuotation->save();
+        $total_paid = $saleQuotation->paid_amount + $saleQuotation->credibility_amount;
+
+        if($total_paid >= $saleQuotation->amount){
+            $count = SaleOrder::count();
+            $pro = $count + 1;
+            $user = auth()->user();
+
+            $saleOrderPayload = [
+                'reference_no' => "DGC-SAO-0" . $pro,
+                'sale_quotation_id' => $saleQuotation->id,
+                'client_id' => $saleQuotation->client_id,
+                'amount' => $saleQuotation->amount,
+                'added_by' => $user->id,
+            ];
+
+            $saleOrder = SaleOrder::create($saleOrderPayload);
+            if($saleOrder){
+                return redirect()->route('quotations.show', $id)
+                    ->with('success', 'Payment Done and Order created successfully for Quotation with Reference #' . $saleQuotation['reference_no']);
+            }
+        }
 
         return redirect()->route('quotations.show', $id)
-            ->with('success', 'Payment Method created successfully for Quotation with Reference #' . $saleQuotation['reference_no']);
+            ->with('success', 'Payment created successfully for Quotation with Reference #' . $saleQuotation['reference_no']);
     }
 
     public function quotation_credibility_approve()
@@ -107,7 +129,6 @@ class SaleQuotationController extends Controller
 
     public function quotation_approve(Request $request, $id, $type)
     {
-
         $saleQuotation=SaleQuotation::find($id);
         if(!$saleQuotation){
             return redirect('/v2/sales/quotations/credibility-approve')->with('error', 'Quotation not found');
