@@ -26,7 +26,12 @@ class SalePreQuotation extends Model
 
     public function items()
     {
-        return $this->belongsToMany(\App\Models\Bar\POS\Items::class, 'sale_pre_quotation_item')
+        return $this->belongsToMany(
+            \App\Models\Bar\POS\Items::class,
+            'sale_pre_quotation_item',    // Pivot table
+            'sale_pre_quotation_id',      // Foreign key to this model
+            'item_id'                     // Foreign key to Items model (corrected from items_id)
+        )
             ->withPivot('store_id', 'quantity', 'price', 'unit')
             ->withTimestamps();
     }

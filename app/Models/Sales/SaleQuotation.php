@@ -24,10 +24,8 @@ class SaleQuotation extends Model
         return $this->belongsTo('App\Models\User', 'added_by');
     }
 
-    public function items()
+    public function preQuotation()
     {
-        return $this->belongsToMany(\App\Models\Bar\POS\Items::class, 'sale_quotation_item')
-            ->withPivot('store_id', 'quantity', 'price', 'unit')
-            ->withTimestamps();
+        return $this->belongsTo(SalePreQuotation::class, 'sale_pre_quotation_id');
     }
 }

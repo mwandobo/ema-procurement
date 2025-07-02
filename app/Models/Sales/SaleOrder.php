@@ -25,14 +25,6 @@ class SaleOrder extends Model
 
     public function user()
     {
-
         return $this->belongsTo('App\Models\User', 'added_by');
     }
-
-//    public function items()
-//    {
-//        return $this->belongsToMany(\App\Models\Bar\POS\Items::class, 'sale_quotation_item')
-//            ->withPivot('store_id', 'quantity', 'price', 'unit')
-//            ->withTimestamps();
-//    }
 }

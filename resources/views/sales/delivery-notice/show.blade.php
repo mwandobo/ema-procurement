@@ -6,16 +6,6 @@
     }
 </style>
 
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
 @section('content')
     <section class="section">
         <div class="section-body">
@@ -27,33 +17,14 @@
                            title="">
                             Download PDF
                         </a>
-                        @if( is_null($saleQuotation->credibility_approved_1))
-                            <button type="button"
-                                    class="btn btn-xs btn-success"
-                                    data-toggle="modal"
-                                    data-target="#appFormModal">
-                                Approve Credibility
-                            </button>
-                            <button type="button"
-                                    class="btn btn-xs btn-danger"
-                                    data-toggle="modal"
-                                    data-target="#appForm1Modal">
-                                DisApprove Credibility
-                            </button>
 
-                        @else
-                        @if( $saleQuotation->credibility_approved_1 === '1')
-                                <div class="badge badge-success badge-shadow">Approved</div>
-                            @else
-                                <div class="badge badge-danger badge-shadow">DisApproved</div>
-                            @endif
-                        @endif
                     </div>
                     <br>
                     <div class="card">
                         <div class="card-body">
                             <?php
                             $settings = App\Models\Setting::first();
+
                             ?>
                             <div class="tab-content" id="myTab3Content">
                                 <div class="tab-pane fade show active" id="about" role="tabpanel"
@@ -71,16 +42,8 @@
                                             : {{Carbon\Carbon::parse($saleQuotation->purchase_date)->format('d/m/Y')}}
                                             <br>Payment Method
                                             : {{ $saleQuotation->payment_method}}
-                                            <br>Amount to Be Paid
+                                            <br>Amount
                                             : {{ $saleQuotation->amount}}
-                                            <br>Credit Amount
-                                            : {{ $saleQuotation->credibility_amount ?? 0}}
-                                            <br>Cash Amount
-                                            : {{ $saleQuotation->amount - $saleQuotation->credibility_amount ?? 0}}
-                                            <br>Paid Amount
-                                            : {{ $saleQuotation->paid_amount ?? 0}}
-                                            <br>Remaining Amount
-                                            : {{ $saleQuotation->amount - $saleQuotation->paid_amount }}
                                         </div>
                                     </div>
                                     <br>
@@ -106,7 +69,6 @@
                                             : {{!empty($saleQuotation->client->TIN)? $saleQuotation->client->TIN : ''}}
                                         </div>
                                     </div>
-
                                     <?php
 
                                     $sub_total = 0;
@@ -180,6 +142,7 @@
     </section>
 
 
+
     <div class="modal fade show" data-backdrop="" id="appFormModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-dialog" role="document">
@@ -190,17 +153,20 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form method="POST"
-                          action="{{ url('/v2/sales/quotations/credibility-approve/' . $saleQuotation->id . '/approve') }}">
+                    <form method="POST" action="{{ url('v2/sales/quotations/add-payment', $saleQuotation->id ) }}">
                         @csrf
                         <div class="modal-body">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-12 ">
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label">Credibility Percentage</label>
-                                            <div class="col-lg-6">
-                                                <input class="form-control m-b" name="credibility" required/>
+                                            <label class="col-lg-2 col-form-label">Payment Method</label>
+                                            <div class="col-lg-10">
+                                                <select class="form-control m-b" name="payment_method" required>
+                                                    <option value="">Select Payment Method</option>
+                                                    <option value="Credit">Credit</option>
+                                                    <option value="Cash">Cash</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -230,17 +196,16 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form method="POST"
-                          action="{{ url('/v2/sales/quotations/credibility-approve/' . $saleQuotation->id . '/disapprove') }}">
+                    <form method="POST" action="{{ url('v2/sales/quotations/make-payment', $saleQuotation->id ) }}">
                         @csrf
                         <div class="modal-body">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-12 ">
                                         <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label">Paid Amount</label>
                                             <div class="col-lg-8">
-
-                                                <p>Are You sure you want to perform this Action You wont be able to reverse</p>
+                                                <input type="text" class="form-control m-b" name="amount" required/>
                                             </div>
                                         </div>
                                     </div>
@@ -249,7 +214,7 @@
                         </div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="submit" class="btn btn-primary">
-                                Yes
+                                Save
                             </button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
@@ -261,3 +226,88 @@
 
 @endsection
 
+@section('scripts')
+    <script>
+        $('.datatable-basic').DataTable({
+            autoWidth: false,
+            "columnDefs": [{
+                "orderable": false,
+                "targets": [3]
+            }],
+            dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
+            "language": {
+                search: '<span>Filter:</span> _INPUT_',
+                searchPlaceholder: 'Type to filter...',
+                lengthMenu: '<span>Show:</span> _MENU_',
+                paginate: {
+                    'first': 'First',
+                    'last': 'Last',
+                    'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;',
+                    'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;'
+                }
+            },
+
+        });
+    </script>
+
+
+    <script type="text/javascript">
+        function model(id, type) {
+            let url = '{{ route("bar_purchase.show", ":id") }}';
+            url = url.replace(':id', id)
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: {
+                    'type': type,
+                },
+                cache: false,
+                async: true,
+                success: function (data) {
+                    //alert(data);
+                    $('.modal-dialog').html(data);
+                },
+                error: function (error) {
+                    $('#appFormModal').modal('toggle');
+
+                }
+            });
+        }
+    </script>
+
+
+    <script>
+        $('#paymentModeModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var purchaseId = button.data('id')
+            var form = $('#paymentModeForm')
+            form.attr('action', '/bar_purchase/confirm_order/' + purchaseId)
+            $('#purchase_id').val(purchaseId)
+        })
+    </script>
+
+    <script type="text/javascript">
+        function model(id, type) {
+
+            $.ajax({
+                type: 'GET',
+                url: '/courier/public/discountModal/',
+                data: {
+                    'id': id,
+                    'type': type,
+                },
+                cache: false,
+                async: true,
+                success: function (data) {
+                    //alert(data);
+                    $('.modal-dialog').html(data);
+                },
+                error: function (error) {
+                    $('#appFormModal').modal('toggle');
+
+                }
+            });
+        }
+    </script>
+
+@endsection

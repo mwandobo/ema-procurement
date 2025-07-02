@@ -38,6 +38,9 @@ Route::group(['prefix' => 'v2'], function () {
         Route::post('quotations/make-payment/{id}', 'Sales\SaleQuotationController@make_payment');
 
         Route::resource('orders', 'Sales\SaleOrderController');
+        Route::get('orders/fetch-items-by-order/{id}', 'Sales\SaleOrderController@fetchItemsByOrder');
+
+        Route::resource('deliveries', 'Sales\SaleDeliveryNoticeController');
 
     });
 });

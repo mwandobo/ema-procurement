@@ -260,6 +260,8 @@
                                                 href="{{url('v2/sales/quotations/credibility-approve')}}">Sales Quotations Approval</a></li>
                         <li class="nav-item"><a class="nav-link {{ (request()->is('v2/sales/orders')) ? 'active' : ''  }}"
                                                 href="{{url('v2/sales/orders')}}">Sales Orders</a></li>
+                        <li class="nav-item"><a class="nav-link {{ (request()->is('v2/sales/deliveries')) ? 'active' : ''  }}"
+                                                href="{{url('v2/sales/deliveries')}}">Delivery Notes</a></li>
                         <li class="nav-item"><a class="nav-link {{ (request()->is('pos/sales/profoma/invoice*')) ? 'active' : ''  }}"
                                 href="{{url('pos/sales/profoma/invoice')}}">Profoma Invoice</a></li>
 
