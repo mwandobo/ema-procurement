@@ -30,9 +30,15 @@
                                 <li class="nav-item">
                                     <a class="nav-link @if(!empty($id)) active show @endif" id="profile-tab2"
                                        data-toggle="tab" href="#profile2" role="tab" aria-controls="profile"
-                                       aria-selected="false">New Sale Pre-Quotation</a>
-                                </li>
+                                       aria-selected="false">
 
+                                        @if(!empty($id))
+                                            Edit
+                                        @else
+                                            New
+                                        @endif
+                                        Sale Pre-Quotation</a>
+                                </li>
                             </ul>
                             <div class="tab-content tab-bordered" id="myTab3Content">
                                 <div class="tab-pane fade @if(empty($id)) active show @endif" id="home2" role="tabpanel"
@@ -86,7 +92,7 @@
 
                                                                     <a class="list-icons-item text-primary"
                                                                        title="Edit"
-                                                                       onclick="return confirm('Are you sure?')"
+{{--                                                                       onclick="return confirm('Are you sure?')"--}}
                                                                        href="{{ route('pre-quotations.edit', $row->id)}}"><i
                                                                             class="icon-pencil7"></i></a>&nbsp
 
@@ -122,10 +128,14 @@
                                         </table>
                                     </div>
                                 </div>
+
+
+
+
+
                                 <div class="tab-pane fade @if(!empty($id)) active show @endif" id="profile2"
                                      role="tabpanel"
                                      aria-labelledby="profile-tab2">
-
                                     <div class="card">
                                         <div class="card-header">
                                             @if(empty($id))
@@ -139,17 +149,12 @@
                                                 <div class="col-sm-12 ">
                                                     @if(isset($id))
                                                         {{ Form::model($id, ['url' => "/v2/sales/pre-quotations/{$id}", 'method' => 'PUT']) }}
-
                                                     @else
                                                         {{ Form::open(['url' => '/v2/sales/pre-quotations', 'method' => 'POST']) }}
                                                         @method('POST')
                                                     @endif
-
-
                                                     <input type="hidden" name="type"
                                                            class="form-control name_list"/>
-
-
                                                     <div class="form-group row">
                                                         <label class="col-lg-2 col-form-label">Clients Name</label>
                                                         <div class="col-lg-4">
@@ -158,28 +163,23 @@
                                                                 <option value="">Select Client Name</option>
                                                                 @if(!empty($clients))
                                                                     @foreach($clients as $row)
-
                                                                         <option @if(isset($data))
                                                                                     {{  $data->client_id == $row->id  ? 'selected' : ''}}
                                                                                 @endif value="{{ $row->id}}">{{$row->name}}</option>
-
                                                                     @endforeach
                                                                 @endif
                                                             </select>
                                                         </div>
                                                     </div>
-
                                                         <br>
                                                         <h4 align="center">Enter Item Details</h4>
                                                         <hr>
-
-                                                        <button type="button" name="add"
-                                                                class="btn btn-success btn-xs add">
-                                                            <i
-                                                                class="fas fa-plus"> Add item</i></button>
+                                                        <button type="button" name="add" class="btn btn-success btn-xs add">
+                                                            <i class="fas fa-plus"> Add item</i>
+                                                        </button>
                                                         <br>
                                                         <br>
-                                                        <div class="table-responsive">
+                                                         <div class="table-responsive">
                                                             <table class="table table-bordered" id="cart">
                                                                 <thead>
                                                                 <tr>
@@ -192,59 +192,60 @@
                                                                 </tr>
                                                                 </thead>
                                                                 <tbody>
-
-
                                                                 </tbody>
                                                                 <tfoot>
                                                                 @if(!empty($id))
-                                                                    @if(!empty($items))
-                                                                        @foreach ($items as $i)
+                                                                    @if(!empty($salePreQuotationItems))
+                                                                        @foreach ($salePreQuotationItems as $i)
                                                                             <tr class="line_items">
-                                                                                <td><select name="item_name[]"
+                                                                                <td>
+                                                                                    <select name="item_name[]"
                                                                                             class="form-control m-b item_name"
                                                                                             required
-                                                                                            data-sub_category_id={{$i->order_no}}>
-                                                                                        <option value="">Select Item
-                                                                                            Name
-                                                                                        </option>@foreach($name ?? ''
-                                                                    as $n)
+                                                                                            >
+                                                                                        <option value="">Select Item Name </option>
+                                                                                        @foreach($items ?? '' as $n)
                                                                                             <option value="{{ $n->id}}"
-                                                                                                    @if(isset($i))@if($n->id == $i->item_name)
-                                                                                                        selected @endif @endif >{{$n->name}}</option>
+                                                                                                    @if(isset($i))@if($n->id == $i->item_id)
+                                                                                                        selected @endif @endif >{{$n->name}}
+                                                                                            </option>
                                                                                         @endforeach
-                                                                                    </select></td>
-                                                                                <td><input type="number"
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="number"
                                                                                            name="quantity[]"
                                                                                            class="form-control item_quantity{{$i->order_no}}"
                                                                                            placeholder="quantity"
                                                                                            id="quantity"
                                                                                            value="{{ isset($i) ? $i->quantity : ''}}"
-                                                                                           required/></td>
-                                                                                <td><input type="text" name="price[]"
+                                                                                           required/>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <select name="store_id[]"
+                                                                                            class="form-control m-b item_name"
+                                                                                            required
+                                                                                    >
+                                                                                        <option value="">Select Item Name </option>
+                                                                                        @foreach($stores ?? '' as $n)
+                                                                                            <option value="{{ $n->id}}"
+                                                                                                    @if(isset($i))@if($n->id == $i->store_id)
+                                                                                                        selected @endif @endif >{{$n->name}}
+                                                                                            </option>
+                                                                                        @endforeach
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text" name="price[]"
                                                                                            class="form-control item_price{{$i->order_no}}"
-                                                                                           placeholder="price" required
+                                                                                           placeholder="price" readonly
                                                                                            value="{{ isset($i) ? $i->price : ''}}"/>
                                                                                 </td>
                                                                                 <td><input type="text" name="unit[]"
                                                                                            class="form-control item_unit{{$i->order_no}}"
-                                                                                           placeholder="unit" disabled
+                                                                                           placeholder="unit" readonly
                                                                                            value="{{ isset($i) ? $i->unit : ''}}"/>
-                                                                                <input type="hidden"
-                                                                                       name="saved_items_id[]"
-                                                                                       class="form-control item_saved{{$i->order_no}}"
-                                                                                       value="{{ isset($i) ? $i->id : ''}}"
-                                                                                       required/>
-                                                                                <td><input type="text"
-                                                                                           name="total_cost[]"
-                                                                                           class="form-control item_total{{$i->order_no}}"
-                                                                                           placeholder="total" required
-                                                                                           value="{{ isset($i) ? $i->total_cost : ''}}"
-                                                                                           readonly
-                                                                                           jAutoCalc="{quantity} * {price}"/>
                                                                                 </td>
-                                                                                <input type="hidden" name="items_id[]"
-                                                                                       class="form-control name_list"
-                                                                                       value="{{ isset($i) ? $i->id : ''}}"/>
                                                                                 <td>
                                                                                     <button type="button" name="remove"
                                                                                             class="btn btn-danger btn-xs rem"
@@ -253,22 +254,19 @@
                                                                                     </button>
                                                                                 </td>
                                                                             </tr>
-
                                                                         @endforeach
                                                                     @endif
                                                                 @endif
                                                                 </tfoot>
                                                             </table>
                                                         </div>
-
-
                                                         <br>
                                                         <div class="form-group row">
                                                             <div class="col-lg-offset-2 col-lg-12">
                                                                 @if(!@empty($id))
 
                                                                     <a class="btn btn-sm btn-danger float-right m-t-n-xs"
-                                                                       href="{{ route('purchase.index')}}">
+                                                                       href="{{ url('/v2/sales/pre-quotations')}}">
                                                                         cancel
                                                                     </a>
                                                                     <button
@@ -506,7 +504,7 @@
 
 
                 // Price input
-                html += '<td><input type="text" name="price[]" class="form-control item_price' + count + '" placeholder="Price" required /></td>';
+                html += '<td><input type="text" name="price[]" class="form-control item_price' + count + '" placeholder="Price" readonly /></td>';
 
                 // Unit input
                 html += '<td><input type="text" name="unit[]" class="form-control item_unit' + count + '" placeholder="Unit" readonly /></td>';

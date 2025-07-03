@@ -14,8 +14,8 @@
                 <div class="col-12 col-md-12 col-lg-12">
 
                     <div class="col-lg-10">
-                            <a class="btn btn-xs btn-primary" onclick="return confirm('Are you sure?')"
-                               href="{{ route('bar_purchase.edit', $saleQuotation->id)}}" title=""> Edit </a>
+                            <a class="btn btn-xs btn-primary"
+                               href="{{ url('/v2/sales/pre-quotations/'. $saleQuotation->id .'/edit' )}}" title=""> Edit </a>
 
 
                         <a class="btn btn-xs btn-success"

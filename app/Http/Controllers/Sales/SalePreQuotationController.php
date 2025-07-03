@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Sales;
 use App\Http\Controllers\Controller;
 use App\Models\Bar\POS\Client;
 use App\Models\Bar\POS\Items;
+use App\Models\Currency;
 use App\Models\Inventory\Location;
+use App\Models\POS\Purchase;
+use App\Models\POS\PurchaseItems;
 use App\Models\Sales\SalePreQuotation;
 use App\Models\Sales\SalePreQuotationItem;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Toastr;
 
@@ -60,17 +64,6 @@ class SalePreQuotationController extends Controller
                 'updated_at' => now(),
             ]);
 
-
-//            $discountRule = \App\Models\Bar\POS\Discount::where('item_id', $row->item_id)
-//                ->where('min_quantity', '<=', $row->quantity)
-//                ->where('max_quantity', '>=', $row->quantity)
-//                ->first();
-//            if ($discountRule) {
-//                $amount = ($amount * (100 - $discountRule->value)) / 100;
-//                $cost_price = ($item->cost_price * (100 - $discountRule->value)) / 100;
-//            }
-
-
             $total_amount += $request->quantity[$index] * $request->price[$index];
         }
 
@@ -90,11 +83,68 @@ class SalePreQuotationController extends Controller
     public function show($id, Request $request)
     {
         $saleQuotation = SalePreQuotation::find($id);
-
         $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $id)->get();
 
-        return view('sales.pre-quotation.items-details', compact('saleQuotation', 'saleQuotationItems',));
+        return view('sales.pre-quotation.show', compact('saleQuotation', 'saleQuotationItems',));
     }
+
+    public function edit($id)
+    {
+        $data= SalePreQuotation::find($id);
+
+        $salePreQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $id)->get();
+
+        $items = Items::all();
+        $stores = Location::all();
+        $clients = Client::all();
+
+        return view('sales.pre-quotation.index', compact('data', 'salePreQuotationItems', 'items', 'stores', 'clients', 'id'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'client_id' => 'required|exists:store_pos_clients,id',
+            'item_name' => 'required|array',
+            'quantity' => 'required|array',
+            'price' => 'required|array',
+            'unit' => 'required|array',
+            'store_id' => 'required|array',
+        ]);
+
+        $saleQuotation = SalePreQuotation::findOrFail($id);
+        $saleQuotation->client_id = $request->client_id;
+        $saleQuotation->updated_at = now();
+        $saleQuotation->save();
+
+        // Delete existing items
+        \DB::table('sale_pre_quotation_item')->where('sale_pre_quotation_id', $id)->delete();
+
+        $total_amount = 0;
+
+        // Re-insert updated line items
+        foreach ($request->item_name as $index => $itemId) {
+            \DB::table('sale_pre_quotation_item')->insert([
+                'sale_pre_quotation_id' => $id,
+                'item_id' => $itemId,
+                'store_id' => $request->store_id[$index],
+                'quantity' => $request->quantity[$index],
+                'price' => $request->price[$index],
+                'unit' => $request->unit[$index],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            $total_amount += $request->quantity[$index] * $request->price[$index];
+        }
+
+        $saleQuotation->amount = $total_amount;
+        $saleQuotation->save();
+
+        return redirect()->route('pre-quotations.index')
+            ->with('success', 'Pre-Quotation updated successfully with Reference #' . $saleQuotation->reference_no);
+    }
+
 
     public function destroy($id)
     {
@@ -103,7 +153,6 @@ class SalePreQuotationController extends Controller
             $saleQuotation->delete();
         }
 
-        Toastr::success('Deleted Successfully', 'Success');
-        return redirect(url('/v2/sales/pre-quotations'));
+        return redirect(url('/v2/sales/pre-quotations'))->with('success', 'Pre-Quotation deleted successfully');
     }
 }
