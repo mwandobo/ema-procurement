@@ -8,6 +8,7 @@ use App\Models\Sales\SaleOrder;
 use App\Models\Sales\SalePreQuotation;
 use App\Models\Sales\SalePreQuotationItem;
 use App\Models\Sales\SaleQuotation;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -48,6 +49,16 @@ class SaleQuotationController extends Controller
         $salePreQuotation = SalePreQuotation::with('client')->find($saleQuotation->sale_pre_quotation_id);
         $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $salePreQuotation->id)->get();
         return view('sales.quotation.show', compact('saleQuotation', 'saleQuotationItems',));
+    }
+
+    public function pdf($id)
+    {
+        $saleQuotation = SaleQuotation::find($id);
+        $salePreQuotation = SalePreQuotation::find($saleQuotation->sale_pre_quotation_id);
+        $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $salePreQuotation->id)->get();
+        view()->share(['saleQuotation' => $saleQuotation, 'saleQuotationItems' => $saleQuotationItems]);
+
+        return PDF::loadView('sales.quotation.pdf-view')->setPaper('a4', 'portrait')->download('SALE QUOTATION REF NO # ' .  $saleQuotation->reference_no . ".pdf");
     }
 
     public function add_payment_method( Request $request, $id)
@@ -153,5 +164,16 @@ class SaleQuotationController extends Controller
         $saleQuotation->save();
 
         return redirect('/v2/sales/quotations/credibility-approve')
-            ->with('success', 'Quotation was '. $type === 'approve' ?  'Approved' : "DisApproved ".  'Successfully, Reference #' . $saleQuotation['reference_no']);    }
+            ->with('success', 'Quotation was '. $type === 'approve' ?  'Approved' : "DisApproved ".  'Successfully, Reference #' . $saleQuotation['reference_no']);
+    }
+
+    public function approve_pdf($id)
+    {
+        $saleQuotation = SaleQuotation::find($id);
+        $salePreQuotation = SalePreQuotation::find($saleQuotation->sale_pre_quotation_id);
+        $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $salePreQuotation->id)->get();
+        view()->share(['saleQuotation' => $saleQuotation, 'saleQuotationItems' => $saleQuotationItems]);
+
+        return PDF::loadView('sales.quotation.approved.pdf-view')->setPaper('a4', 'portrait')->download('SALE QUOTATION REF NO # ' .  $saleQuotation->reference_no . ".pdf");
+    }
 }

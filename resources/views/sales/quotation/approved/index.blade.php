@@ -73,7 +73,7 @@
                                                                        data-toggle="dropdown"><i class="icon-cog6"></i></a>
                                                                     <div class="dropdown-menu">
                                                                         <a class="nav-link" id="profile-tab2"
-                                                                           href="{{ route('purchase_pdfview',['download'=>'pdf','id'=>$row->id]) }}"
+                                                                           href="{{ url('v2/sales/quotations/credibility-approve/'. $row->id .'/pdf') }}"
                                                                            role="tab" aria-selected="false">Download
                                                                             PDF</a>
                                                                     </div>

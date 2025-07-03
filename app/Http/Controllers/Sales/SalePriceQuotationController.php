@@ -28,7 +28,6 @@ class SalePriceQuotationController extends Controller
     {
         $saleQuotation = SalePreQuotation::find($id);
         $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $id)->get();
-
         view()->share(['saleQuotation' => $saleQuotation, 'saleQuotationItems' => $saleQuotationItems]);
 
         return PDF::loadView('sales.quotation-price-approval.pdf-view')->setPaper('a4', 'portrait')->download('SALE PRE-QUOTATION REF NO # ' .  $saleQuotation->reference_no . ".pdf");
