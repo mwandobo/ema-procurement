@@ -31,8 +31,6 @@
                                 Dashboard</h4>
                             <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
                         </div>
-
-
                         <div class="header-elements d-none">
                             <div class="d-flex justify-content-center">
                             @can('view-member-menu')
@@ -116,7 +114,5 @@ $user= App\Models\User::find(auth()->user()->id);
     {!! Toastr::message() !!}
 
 </body>
-
-
 </html>
 
