@@ -109,7 +109,7 @@
                                                                        data-toggle="dropdown"><i class="icon-cog6"></i></a>
                                                                     <div class="dropdown-menu">
                                                                         <a class="nav-link" id="profile-tab2"
-                                                                           href="{{ url('/v2/sales/pre-quotations/' .$row->id . 'pdf') }}"
+                                                                           href="{{ url('/v2/sales/pre-quotations/' .$row->id . '/pdf') }}"
                                                                            role="tab" aria-selected="false">Download
                                                                             PDF</a>
                                                                     </div>
