@@ -10,7 +10,6 @@ use App\Models\Sales\SaleQuotation;
 use App\Models\Inventory\Location;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-
 class SaleOrderController extends Controller
 {
     public function index()

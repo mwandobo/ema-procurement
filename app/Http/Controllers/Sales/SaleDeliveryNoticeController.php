@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bar\POS\Client;
+use App\Models\Bar\POS\Items;
+use App\Models\Inventory\Location;
 use App\Models\Sales\DeliveryNotice;
 use App\Models\Sales\DeliveryNoticeItems;
 use App\Models\Sales\SaleOrder;
@@ -72,6 +75,19 @@ class SaleDeliveryNoticeController extends Controller
         $deliveredItems = DeliveryNoticeItems::where('delivery_notice_id',
             $deliveryNotice->id)->get();
         return view('sales.delivery-notice.show', compact('deliveryNotice', 'deliveredItems', 'saleQuotation'));
+    }
+
+    public function edit($id)
+    {
+        $data= SalePreQuotation::find($id);
+
+        $salePreQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $id)->get();
+
+        $items = Items::all();
+        $stores = Location::all();
+        $clients = Client::all();
+
+        return view('sales.pre-quotation.index', compact('data', 'salePreQuotationItems', 'items', 'stores', 'clients', 'id'));
     }
 
 }
