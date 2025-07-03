@@ -2,14 +2,15 @@
 
 namespace App\Models\Sales;
 
+use App\Models\Bar\POS\Items;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DeliveryNotice extends Model
+class DeliveryNoticeItems extends Model
 {
     use HasFactory;
 
-    protected $table = "delivery_notices";
+    protected $table = "delivered_items";
 
     protected $guarded = ['id'];
 
@@ -24,10 +25,13 @@ class DeliveryNotice extends Model
         return $this->belongsTo('App\Models\User', 'added_by');
     }
 
-    public function items()
+    public function item()
     {
-        return $this->belongsToMany(\App\Models\Bar\POS\Items::class, 'delivered_items', 'delivery_notice_id', 'item_id')
-            ->withPivot('ordered_quantity', 'delivered_quantity',)
-            ->withTimestamps();
+        return $this->belongsTo(Items::class, 'item_id');
+    }
+
+    public function delivery_notice()
+    {
+        return $this->belongsTo(DeliveryNotice::class, 'delivery_notice_id');
     }
 }

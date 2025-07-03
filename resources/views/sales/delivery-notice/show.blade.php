@@ -13,7 +13,7 @@
                 <div class="col-12 col-md-12 col-lg-12">
                     <div class="col-lg-10">
                         <a class="btn btn-xs btn-success"
-                           href="{{ route('bar_purchase_pdfview',['download'=>'pdf','id'=>$saleQuotation->id]) }}"
+                           href="{{ route('bar_purchase_pdfview',['download'=>'pdf','id'=>$deliveryNotice->id]) }}"
                            title="">
                             Download PDF
                         </a>
@@ -37,13 +37,13 @@
                                         <div class="col-lg-3 col-xs-3">
                                         </div>
                                         <div class="col-lg-3 col-xs-3">
-                                            <h5 class=mb0">REF NO : {{$saleQuotation->reference_no}}</h5>
+                                            <h5 class=mb0">REF NO : {{$deliveryNotice->reference_no}}</h5>
                                             Sale Date
-                                            : {{Carbon\Carbon::parse($saleQuotation->purchase_date)->format('d/m/Y')}}
+                                            : {{Carbon\Carbon::parse($deliveryNotice->purchase_date)->format('d/m/Y')}}
                                             <br>Payment Method
-                                            : {{ $saleQuotation->payment_method}}
+                                            : {{ $deliveryNotice->payment_method}}
                                             <br>Amount
-                                            : {{ $saleQuotation->amount}}
+                                            : {{ $deliveryNotice->amount}}
                                         </div>
                                     </div>
                                     <br>
@@ -84,48 +84,25 @@
                                             <tr>
                                                 <th style="color:white;">#</th>
                                                 <th style="color:white;">Items</th>
-                                                <th style="color:white;">Price</th>
-                                                <th style="color:white;">Discounted Price</th>
-                                                <th style="color:white;">Store</th>
-                                                <th style="color:white;">Qty</th>
+                                                <th style="color:white;">Ordered Quantity</th>
+                                                <th style="color:white;">Delivered Quantity</th>
                                                 <th style="color:white;">Unit</th>
-                                                <th style="color:white;">Amount</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            @if(!empty($saleQuotationItems))
-                                                @foreach($saleQuotationItems as $row)
+                                            @if(!empty($deliveredItems))
+                                                @foreach($deliveredItems as $row)
                                                         <?php
                                                         $item = App\Models\Bar\POS\Items::find($row->item_id);
-
-                                                        $amount = $item->cost_price * $row->quantity;
-                                                        $cost_price = $row->cost_price;
-                                                        $discount = 0;
-                                                        $sub_total += $row->total_cost;
-                                                        $gland_total += $row->total_cost + $row->total_tax;
-                                                        $tax += $row->total_tax;
-
-                                                        $discountRule = App\Models\Bar\POS\Discount::where('item_id',
-                                                            $row->item_id)
-                                                            ->where('min_quantity', '<=', $row->quantity)
-                                                            ->where('max_quantity', '>=', $row->quantity)
-                                                            ->first();
-                                                        if ($discountRule) {
-                                                            $amount = ($amount * (100 - $discountRule->value)) / 100;
-                                                            $cost_price = ($item->cost_price * (100 - $discountRule->value)) / 100;
-                                                        }
 
                                                         ?>
                                                     <tr>
                                                         <td class="">{{$i++}}</td>
                                                         <td class=""><strong class="block">({{$item->item_code}})
                                                                 - {{$item->name}}</strong></td>
-                                                        <td class="">{{ $item->cost_price }}</td>
-                                                        <td class="">{{ $cost_price  }}</td>
-                                                        <td class="">{{ $row->store?->name }}</td>
-                                                        <td class="">{{ $row->quantity }}</td>
-                                                        <td class="">{{ $row->unit }}</td>
-                                                        <td class="">{{ $amount }} </td>
+                                                        <td class="">{{ $row->ordered_quantity }}</td>
+                                                        <td class="">{{ $row->delivered_quantity  }}</td>
+                                                        <td class="">{{ $item->unit }}</td>
                                                     </tr>
                                                 @endforeach
                                             @endif

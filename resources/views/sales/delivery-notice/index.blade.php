@@ -74,12 +74,12 @@
                                                     <tr class="gradeA even" role="row">
                                                         <td>
                                                             <a class="nav-link" id="profile-tab2"
-                                                               href="{{ route('pre-quotations.show',$row->id)}}"
+                                                               href="{{ url('v2/sales/deliveries',$row->id)}}"
                                                                role="tab"
                                                                aria-selected="false">{{$row->reference_no}}</a>
                                                         </td>
-                                                        <td> {{$row->client->name}}</td>
-                                                        <td> {{$row->amount}}</td>
+                                                        <td> {{$row->order?->reference_no}}</td>
+                                                        <td> {{$row->order?->quotation->client?->name}}</td>
                                                         <td>{{Carbon\Carbon::parse($row->created_at)->format('d/m/Y')}} </td>
                                                         <td>
                                                             <div class="form-inline">
@@ -134,9 +134,9 @@
                                             <div class="row">
                                                 <div class="col-sm-12 ">
                                                     @if(isset($id))
-                                                        {{ Form::model($id, ['url' => "/v2/sales/pre-quotations/{$id}", 'method' => 'PUT']) }}
+                                                        {{ Form::model($id, ['url' => "/v2/sales/deliveries/{$id}", 'method' => 'PUT']) }}
                                                     @else
-                                                        {{ Form::open(['url' => '/v2/sales/pre-quotations', 'method' => 'POST']) }}
+                                                        {{ Form::open(['url' => '/v2/sales/deliveries', 'method' => 'POST']) }}
                                                         @method('POST')
                                                     @endif
                                                     <div class="form-group row">
@@ -374,11 +374,11 @@
                     <tr class="line_items">
                         <td>  <p> ${item.name} <p/></td>
                         <td>  <p> ${item.price} <p/></td>
-                        <td>  <p> ${item.quantity} <p/></td>
+                        <td>  <input type="number" name="ordered_quantity[]" class="form-control" value="${item.quantity}" readonly /></td>
                         <td>  <p> ${item.unit} <p/></td>
                         <td>  <p> ${item.store} <p/></td>
-                        <td><input type="number" name="quantity[]" class="form-control" value="${item.quantity}" required /></td>
-                        <td><input type="number" name="ids[]" class="form-control" value="${item.id}" hidden /></td>
+                        <td><input type="number" name="delivered_quantity[]" class="form-control" value="${item.quantity}" required /></td>
+                        <td><input type="number" name="item_ids[]" class="form-control" value="${item.id}" hidden /></td>
                     </tr>
                 `;
                             tbody.append(row);
