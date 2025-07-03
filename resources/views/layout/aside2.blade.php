@@ -262,13 +262,15 @@
                                                 href="{{url('v2/sales/orders')}}">Sales Orders</a></li>
                         <li class="nav-item"><a class="nav-link {{ (request()->is('v2/sales/deliveries')) ? 'active' : ''  }}"
                                                 href="{{url('v2/sales/deliveries')}}">Delivery Notes</a></li>
-                        <li class="nav-item"><a class="nav-link {{ (request()->is('pos/sales/profoma/invoice*')) ? 'active' : ''  }}"
-                                href="{{url('pos/sales/profoma/invoice')}}">Profoma Invoice</a></li>
+                        <li class="nav-item"><a class="nav-link {{ (request()->is('v2/sales/tax-invoices')) ? 'active' : ''  }}"
+                                                href="{{url('v2/sales/tax-invoices')}}">Tax Invoices</a></li>
+{{--                        <li class="nav-item"><a class="nav-link {{ (request()->is('pos/sales/profoma/invoice*')) ? 'active' : ''  }}"--}}
+{{--                                href="{{url('pos/sales/profoma/invoice')}}">Profoma Invoice</a></li>--}}
 
-                        <li class="nav-item"><a class="nav-link {{ (request()->is('pos/sales/invoices*')) ? 'active' : ''  }}"
-                                href="{{url('pos/sales/invoices')}}">Invoice</a></li>
-                        <li class="nav-item"><a class="nav-link {{ (request()->is('bar/sales/bar_invoice/bar_invoice_payment*')) ? 'active' : ''  }}"
-                                href="{{url('bar/sales/bar_invoice_payment')}}">Invoice Payment</a></li>
+{{--                        <li class="nav-item"><a class="nav-link {{ (request()->is('pos/sales/invoices*')) ? 'active' : ''  }}"--}}
+{{--                                href="{{url('pos/sales/invoices')}}">Invoice</a></li>--}}
+{{--                        <li class="nav-item"><a class="nav-link {{ (request()->is('bar/sales/bar_invoice/bar_invoice_payment*')) ? 'active' : ''  }}"--}}
+{{--                                href="{{url('bar/sales/bar_invoice_payment')}}">Invoice Payment</a></li>--}}
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('inventory/discounts*') ? 'active' : '' }}"
                                 href="{{ route('inventory.discounts.index') }}">
