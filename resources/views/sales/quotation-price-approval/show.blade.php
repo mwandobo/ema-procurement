@@ -21,7 +21,7 @@
                     <div class="col-12 col-md-12 col-lg-12">
                         <div class="col-lg-10 mb-2">
                             <a class="btn btn-xs btn-success"
-                               href="{{ route('bar_purchase_pdfview',['download'=>'pdf','id'=>$saleQuotation->id]) }}">
+                               href="{{ url('/v2/sales/quotation-price-approval/' . $saleQuotation->id . '/pdf',) }}">
                                 Download PDF
                             </a>
                             <button type="submit" id="submitBtn" class="btn btn-xs btn-primary" disabled>
