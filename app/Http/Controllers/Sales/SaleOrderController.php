@@ -8,6 +8,7 @@ use App\Models\Sales\SalePreQuotation;
 use App\Models\Sales\SalePreQuotationItem;
 use App\Models\Sales\SaleQuotation;
 use App\Models\Inventory\Location;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class SaleOrderController extends Controller
@@ -24,19 +25,26 @@ class SaleOrderController extends Controller
         $saleQuotation = SaleQuotation::find($saleOrder->sale_quotation_id);
         $salePreQuotation = SalePreQuotation::with('client')->find($saleQuotation->sale_pre_quotation_id);
         $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $salePreQuotation->id)->get();
-        return view('sales.order.show', compact('saleQuotation', 'saleQuotationItems',));
+        return view('sales.order.show', compact('saleOrder', 'saleQuotation', 'saleQuotationItems',));
+    }
+
+    public function pdf($id)
+    {
+        $saleOrder=SaleOrder::find($id);
+        $saleQuotation = SaleQuotation::find($saleOrder->sale_quotation_id);
+        $salePreQuotation = SalePreQuotation::find($saleQuotation->sale_pre_quotation_id);
+        $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $salePreQuotation->id)->get();
+        view()->share(['saleQuotation' => $saleQuotation, 'saleQuotationItems' => $saleQuotationItems]);
+
+        return PDF::loadView('sales.order.pdf-view')->setPaper('a4', 'portrait')->download('SALE QUOTATION REF NO # ' .  $saleQuotation->reference_no . ".pdf");
     }
 
     public function fetchItemsByOrder($orderId)
     {
         $saleOrder = SaleOrder::with('quotation.preQuotation.items')->find($orderId);
-
         if (!$saleOrder || !$saleOrder->quotation || !$saleOrder->quotation->preQuotation) {
             return response()->json(['items' => []]);
         }
-
-//        dd( $saleOrder->quotation->preQuotation->items);
-
 
         $items = $saleOrder->quotation->preQuotation->items->map(function ($item) {
 
