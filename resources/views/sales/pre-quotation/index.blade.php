@@ -109,21 +109,16 @@
                                                                        data-toggle="dropdown"><i class="icon-cog6"></i></a>
                                                                     <div class="dropdown-menu">
                                                                         <a class="nav-link" id="profile-tab2"
-                                                                           href="{{ route('purchase_pdfview',['download'=>'pdf','id'=>$row->id]) }}"
+                                                                           href="{{ url('/v2/sales/pre-quotations/' .$row->id . 'pdf') }}"
                                                                            role="tab" aria-selected="false">Download
                                                                             PDF</a>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
-
                                                         </td>
-
                                                     </tr>
                                                 @endforeach
-
                                             @endif
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -294,105 +289,6 @@
                     </div>
                 </div>
             </div>
-
-
-        <div class="modal fade show" data-backdrop="" id="appFormModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="formModal">Add Supplier</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form id="addClientForm" method="post" action="javascript:void(0)">
-                            @csrf
-                            <div class="modal-body">
-
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-12 ">
-
-                                            <div class="form-group row"><label
-                                                    class="col-lg-2 col-form-label">Name</label>
-
-                                                <div class="col-lg-10">
-                                                    <input type="text" name="name" id="name"
-                                                           class="form-control" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row"><label
-                                                    class="col-lg-2 col-form-label">Phone</label>
-
-                                                <div class="col-lg-10">
-                                                    <input type="text" name="phone" id="phone"
-                                                           class="form-control" placeholder="+255713000000" required>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row"><label
-                                                    class="col-lg-2 col-form-label">Email</label>
-                                                <div class="col-lg-10">
-                                                    <input type="email" name="email" id="email"
-                                                           class="form-control" required>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row"><label
-                                                    class="col-lg-2 col-form-label">Address</label>
-
-                                                <div class="col-lg-10">
-                                                <textarea name="address" id="address" class="form-control"
-                                                          required>  </textarea>
-
-
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row"><label
-                                                    class="col-lg-2 col-form-label">TIN</label>
-
-                                                <div class="col-lg-10">
-                                                    <input type="text" name="TIN" id="TIN"
-                                                           value="{{ isset($data) ? $data->TIN : ''}}"
-                                                           class="form-control" required>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row"><label
-                                                    class="col-lg-2 col-form-label">VAT</label>
-
-                                                <div class="col-lg-10">
-                                                    <input type="text" name="VAT" id="VAT"
-                                                           value="{{ isset($data) ? $data->VAT : ''}}"
-                                                           class="form-control" required>
-                                                </div>
-                                            </div>
-
-
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                            </div>
-                            <div class="modal-footer bg-whitesmoke br">
-                                <button type="submit" class="btn btn-primary" id="save" onclick="saveSupplier(this)"
-                                        data-dismiss="modal">Save
-                                </button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-
-
-                        </form>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
     </section>
 @endsection
 
@@ -416,14 +312,12 @@
                     'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;'
                 }
             },
-
         });
     </script>
     <script src="{{ url('assets/js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <script>
         $(document).ready(function () {
-
             $(document).on('click', '.remove', function () {
                 $(this).closest('tr').remove();
             });
@@ -442,14 +336,9 @@
                         console.log(data);
                         $('.item_price' + sub_category_id).val(data[0]["cost_price"]);
                         $(".item_unit" + sub_category_id).val(data[0]["unit"]);
-
                     }
-
                 });
-
             });
-
-
         });
     </script>
 
@@ -541,72 +430,4 @@
 
         });
     </script>
-
-
-
-    <script type="text/javascript">
-        function model(id, type) {
-            $('#appFormModal').modal('toggle');
-
-
-
-            // $.ajax({
-            //     type: 'GET',
-            //     url: '/courier/public/discountModal/',
-            //     data: {
-            //         'id': id,
-            //         'type': type,
-            //     },
-            //     cache: false,
-            //     async: true,
-            //     success: function (data) {
-            //         //alert(data);
-            //         $('.modal-dialog').html(data);
-            //     },
-            //     error: function (error) {
-            //         $('#appFormModal').modal('toggle');
-            //
-            //     }
-            // });
-
-        }
-
-        function saveSupplier(e) {
-
-            var name = $('#name').val();
-            var phone = $('#phone').val();
-            var email = $('#email').val();
-            var address = $('#address').val();
-            var TIN = $('#TIN').val();
-            var VAT = $('#VAT').val();
-
-            $.ajax({
-                type: 'GET',
-                url: '{{url("tyre/addSupp")}}',
-                data: {
-                    'name': name,
-                    'phone': phone,
-                    'email': email,
-                    'address': address,
-                    'TIN': TIN,
-                    'VAT': VAT,
-                },
-                dataType: "json",
-                success: function (response) {
-                    console.log(response);
-
-                    var id = response.id;
-                    var name = response.name;
-
-                    var option = "<option value='" + id + "'  selected>" + name + " </option>";
-
-                    $('#supplier_id').append(option);
-                    $('#appFormModal').hide();
-
-
-                }
-            });
-        }
-    </script>
-
 @endsection

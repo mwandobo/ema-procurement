@@ -1,106 +1,3 @@
-side bar is aside2.blade.php
-i have new route called v2 where all my routes will be there
-i have added item_id on store_item_discounts
-items are from model use App\Models\Bar\POS\Items;
-Purchase controller is from Bar/Purchase
-
-use App\Models\Inventory\Location;
-
-// Raja commited
-1. Added function in Purchase controller is from Bar/Purchase called confirm_order_store
-
-2. Added 2 columns in store_pos_purchase_items table
-
-3. Edit view in " bar.pos.purchases.supplier_purchases_price "
-
-        <td>
-                                                    @if($row->approval_1 == '' && $row->status == 0)
-                                                    <div class="badge badge-danger badge-shadow">Waiting For First
-                                                        Approval</div>
-                                                    @elseif($row->approval_1 != '' && $row->approval_2 == '' &&
-                                                    $row->status == 0)
-                                                    <div class="badge badge-danger badge-shadow">Waiting For Second
-                                                        Approval</div>
-                                                    @elseif($row->approval_1 != '' && $row->approval_2 != '' &&
-                                                    $row->status == 0)
-                                                    <div class="badge badge-danger badge-shadow">Waiting For Final
-                                                        Approval</div>
-                                                    @elseif($row->status == 1)
-                                                    <div class="badge badge-warning badge-shadow">Not Paid</div>
-                                                    @elseif($row->status == 2)
-                                                    <div class="badge badge-info badge-shadow">Partially Paid</div>
-                                                    @elseif($row->status == 3)
-                                                    <span class="badge badge-success badge-shadow">Fully Paid</span>
-                                                    @elseif($row->status == 4)
-                                                    <span class="badge badge-danger badge-shadow">Cancelled</span>
-
-                                                    @endif
-                                                </td>
-
-
-
-
-
-<?php
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-class CreateSaleOrdersTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        if(!Schema::hasTable('sale_orders')){
-        Schema::create('sale_orders', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('sale_quotation_id')->nullable();
-            $table->string('reference_no')->unique();
-            $table->unsignedBigInteger('added_by')->nullable();
-            $table->string('status')->nullable();
-            $table->string('amount')->nullable();
-            $table->string('approved_1')->nullable();
-            $table->unsignedBigInteger('approved_1_by')->nullable();
-            $table->date('approved_1_date')->nullable();
-
-            // Add foreign key constraints (optional but recommended)
-            $table->foreign('sale_quotation_id')->references('id')->on('sale_quotations')->onDelete('cascade');
-            $table->foreign('added_by')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('approved_1_by')->references('id')->on('users')->onDelete('set null');
-            $table->timestamps();
-        });
-    }
-
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::table('sale_orders', function (Blueprint $table) {
-            //
-        });
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -245,8 +142,9 @@ $settings = App\Models\Setting::first();
         <tr>
             <td class="w-50">
                 <div class="box-text">
-                    <img class="pl-lg" style="width: 133px;height: 120px;"
-                         src="{{url('images')}}/{{$settings->site_logo}}">
+                    <img style="width: 133px; height: 120px;"
+                         src="{{ public_path('images/' . $settings->site_logo) }}">
+
                 </div>
             </td>
 
@@ -276,7 +174,7 @@ $settings = App\Models\Setting::first();
     </table>
 
 
-    <div style="clear: both;"></div>
+{{--    <div style="clear: both;"></div>--}}
 </div>
 
 <div class="table-section bill-tbl w-100 mt-10">
@@ -309,20 +207,6 @@ $settings = App\Models\Setting::first();
         </tbody>
     </table>
 </div>
-<!--
-<div class="table-section bill-tbl w-100 mt-10">
-    <table class="table w-100 mt-10">
-        <tr>
-            <th class="w-50">Payment Method</th>
-            <th class="w-50">Shipping Method</th>
-        </tr>
-        <tr>
-            <td>Cash On Delivery</td>
-            <td>Free Shipping - Free Shipping</td>
-        </tr>
-    </table>
-</div>
--->
 
 <?php
 
@@ -368,16 +252,10 @@ $i = 1;
                         $amount = ($amount *( 100 - $discountRule->value)) / 100;
                         $cost_price = ($item->cost_price * (100 -$discountRule->value)) / 100;
                     }
-
                     ?>
 
                 <tr align="center">
                     <td>{{$i++}}</td>
-                        <?php
-                        $item_name = App\Models\Bar\POS\Items::find($row->item_name)?->name ?? '';
-                        $item_code = App\Models\Bar\POS\Items::find($row->item_code)?->item_code ?? '';
-                        ?>
-
                     <td class=""><strong
                             class="block">{{ $item->item_code ? "( $item->item_code) - " : '' }}{{ $item->name }}</strong></td>
                     <td>{{number_format($row->cost_price ,2)}}</td>
@@ -385,43 +263,12 @@ $i = 1;
                     <td>{{ $row->store?->name }}</td>
                     <td>{{ $row->quantity}}</td>
                     <td>{{ $row->unit}}</td>
-                    <td>  {{number_format($amount ,2)}} TZS</td>
+                    <td>{{number_format($amount ,2)}} TZS</td>
                 </tr>
             @endforeach
         @endif
         </tbody>
-
-        <tfoot>
-        <tr>
-            <td colspan="4"></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-        <tr>
-            <td colspan="4"></td>
-            <td><b> Sub Total</b></td>
-            <td>{{number_format($sub_total,2)}} TZS</td>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4"></td>
-            <td><b> VAT (18%)</b></td>
-            <td>{{number_format($tax,2)}} TZS</td>
-            </td>
-        </tr>
-
-        <tr>
-            <td colspan="4"></td>
-            <td><b> Total Amount</b></td>
-            <td>{{number_format($gland_total,2)}} TZS</td>
-            </td>
-        </tr>
-        </tfoot>
     </table>
-
-    <br><br><br><br>
-
 </div>
 
 <footer>
@@ -429,4 +276,3 @@ $i = 1;
 </footer>
 </body>
 </html>
-

@@ -28,6 +28,7 @@ Route::get('/', function () {
 Route::group(['prefix' => 'v2'], function () {
     Route::group(['middleware' => 'auth', 'prefix' => 'sales'], function () {
         Route::get('item', 'Sales\SalePreQuotationController@findItem');
+        Route::get('pre-quotations/{id}/pdf', 'Sales\SalePreQuotationController@pdf');
         Route::resource('pre-quotations', 'Sales\SalePreQuotationController');
         Route::resource('quotation-price-approval', 'Sales\SalePriceQuotationController');
         Route::get('quotations/credibility-approve', 'Sales\SaleQuotationController@quotation_credibility_approve');

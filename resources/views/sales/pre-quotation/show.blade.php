@@ -15,13 +15,11 @@
 
                     <div class="col-lg-10">
                             <a class="btn btn-xs btn-primary"
-                               href="{{ url('/v2/sales/pre-quotations/'. $saleQuotation->id .'/edit' )}}" title=""> Edit </a>
-
-
+                               href="{{ url('/v2/sales/pre-quotations/'. $saleQuotation->id .'/edit' )}}" title="">
+                                Edit </a>
                         <a class="btn btn-xs btn-success"
-                           href="{{ route('bar_purchase_pdfview',['download'=>'pdf','id'=>$saleQuotation->id]) }}" title="">
+                           href="{{ url('/v2/sales/pre-quotations/'. $saleQuotation->id .'/pdf'  ) }}" title="">
                             Download PDF </a>
-
                     </div>
                     <br>
 
@@ -42,24 +40,40 @@
                                                  src="{{url('images')}}/{{$settings->site_logo}}">
                                         </div>
 
-                                        <div class="col-lg-3 col-xs-3">
 
-                                        </div>
 
                                         <div class="col-lg-3 col-xs-3">
-
                                             <h5 class=mb0">REF NO : {{$saleQuotation->reference_no}}</h5>
-                                            Sale Date
-                                            : {{Carbon\Carbon::parse($saleQuotation->purchase_date)->format('d/m/Y')}}
-                                            <br>Due Date
-                                            : {{Carbon\Carbon::parse($saleQuotation->due_date)->format('d/m/Y')}}
-
-
+                                             Date
+                                            : {{Carbon\Carbon::parse($saleQuotation->created_at)->format('d/m/Y')}}
                                         </div>
                                     </div>
+                                    <br>
+                                    <div class="row mb-lg">
+                                        <div class="col-lg-6 col-xs-6">
+                                            <h5 class="p-md bg-items mr-15">Our Info:</h5>
+                                            <h4 class="mb0">{{$settings->site_name}}</h4>
+                                            {{ $settings->site_address }}
+                                            <br>Phone : {{ $settings->site_phone_number}}
+                                            <br> Email : <a
+                                                href="mailto:{{$settings->site_email}}">{{$settings->site_email}}</a>
+                                            <br>TIN : {{$settings->tin}}
+                                        </div>
 
+                                        <div class="col-lg-6 col-xs-6">
+                                            <h5 class="p-md bg-items ml-13"> CLient Info: </h5>
+                                            <h4 class="mb0"> {{$saleQuotation->client->name}}</h4>
+                                            {{$saleQuotation->client->address}}
+                                            <br>Phone : {{$saleQuotation->client->phone}}
+                                            <br> Email : <a
+                                                href="mailto:{{$saleQuotation->client->email}}">{{$saleQuotation->client->email}}</a>
+                                            <br>TIN
+                                            : {{!empty($saleQuotation->client->TIN)? $saleQuotation->client->TIN : ''}}
+                                        </div>
+                                    </div>
+                                    <br>
 
-                                        <?php
+                                    <?php
 
                                         $sub_total = 0;
                                         $gland_total = 0;

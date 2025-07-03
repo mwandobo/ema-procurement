@@ -5,19 +5,15 @@ namespace App\Http\Controllers\Sales;
 use App\Http\Controllers\Controller;
 use App\Models\Bar\POS\Client;
 use App\Models\Bar\POS\Items;
-use App\Models\Currency;
 use App\Models\Inventory\Location;
-use App\Models\POS\Purchase;
-use App\Models\POS\PurchaseItems;
 use App\Models\Sales\SalePreQuotation;
 use App\Models\Sales\SalePreQuotationItem;
-use App\Models\Supplier;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Toastr;
 
 class SalePreQuotationController extends Controller
 {
-
     public function index()
     {
         //
@@ -145,6 +141,16 @@ class SalePreQuotationController extends Controller
             ->with('success', 'Pre-Quotation updated successfully with Reference #' . $saleQuotation->reference_no);
     }
 
+    public function pdf($id)
+    {
+        $saleQuotation = SalePreQuotation::find($id);
+        $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $id)->get();
+
+        view()->share(['saleQuotation' => $saleQuotation, 'saleQuotationItems' => $saleQuotationItems]);
+
+        return PDF::loadView('sales.pre-quotation.pdf-view')->setPaper('a4', 'portrait')->download('SALE PRE-QUOTATION REF NO # ' .  $saleQuotation->reference_no . ".pdf");
+    }
+
 
     public function destroy($id)
     {
@@ -152,7 +158,6 @@ class SalePreQuotationController extends Controller
         if($saleQuotation){
             $saleQuotation->delete();
         }
-
         return redirect(url('/v2/sales/pre-quotations'))->with('success', 'Pre-Quotation deleted successfully');
     }
 }
