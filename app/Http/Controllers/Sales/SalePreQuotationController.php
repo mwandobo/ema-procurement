@@ -10,7 +10,6 @@ use App\Models\Sales\SalePreQuotation;
 use App\Models\Sales\SalePreQuotationItem;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Toastr;
 
 class SalePreQuotationController extends Controller
 {
