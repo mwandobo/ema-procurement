@@ -13,7 +13,7 @@
                 <div class="col-12 col-md-12 col-lg-12">
                     <div class="col-lg-10">
                         <a class="btn btn-xs btn-success"
-                           href="{{ route('bar_purchase_pdfview',['download'=>'pdf','id'=>$saleQuotation->id]) }}"
+                           href="{{ url('/v2/sales/tax-invoices/' .$row->id .'/pdf' ) }}"
                            title="">
                             Download PDF
                         </a>

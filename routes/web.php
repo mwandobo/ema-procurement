@@ -45,6 +45,7 @@ Route::group(['prefix' => 'v2'], function () {
         Route::get('orders/fetch-items-by-order/{id}', 'Sales\SaleOrderController@fetchItemsByOrder');
         Route::get('deliveries/{id}/pdf', 'Sales\SaleDeliveryNoticeController@pdf');
         Route::resource('deliveries', 'Sales\SaleDeliveryNoticeController');
+        Route::get('tax-invoices/{id}/pdf', 'Sales\TaxInvoiceController@pdf');
         Route::resource('tax-invoices', 'Sales\TaxInvoiceController');
     });
 });

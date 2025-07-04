@@ -29,7 +29,14 @@
                                 <li class="nav-item">
                                     <a class="nav-link @if(!empty($id)) active show @endif" id="profile-tab2"
                                        data-toggle="tab" href="#profile2" role="tab" aria-controls="profile"
-                                       aria-selected="false">New Tax Invoice</a>
+                                       aria-selected="false">
+                                        @if(empty($id))
+                                            New
+                                        @else
+                                            Edit
+                                        @endif
+                                            Tax Invoice
+                                    </a>
                                 </li>
 
                             </ul>
@@ -98,12 +105,9 @@
 
                                                                     <a class="list-icons-item text-primary"
                                                                        title="Edit"
-                                                                       onclick="return confirm('Are you sure?')"
-                                                                       href="{{ route('pre-quotations.edit', $row->id)}}"><i
+                                                                       href="{{ url('v2/sales/tax-invoices/'.  $row->id .'/edit')}}"><i
                                                                                 class="icon-pencil7"></i></a>&nbsp
-
-
-                                                                    {!! Form::open(['route' => ['pre-quotations.destroy',$row->id],
+                                                                    {!! Form::open(['url' => ['/v2/sales/tax-invoices', $row->id],
                                                                     'method' => 'delete']) !!}
                                                                     {{ Form::button('<i class="icon-trash"></i>', ['type' => 'submit', 'style' => 'border:none;background: none;', 'class' => 'list-icons-item text-danger', 'title' => 'Delete', 'onclick' => "return confirm('Are you sure?')"]) }}
                                                                     {{ Form::close() }}
@@ -115,7 +119,7 @@
                                                                        data-toggle="dropdown"><i class="icon-cog6"></i></a>
                                                                     <div class="dropdown-menu">
                                                                         <a class="nav-link" id="profile-tab2"
-                                                                           href="{{ route('purchase_pdfview',['download'=>'pdf','id'=>$row->id]) }}"
+                                                                           href="{{ url('/v2/sales/tax-invoices/' .$row->id .'/pdf' ) }}"
                                                                            role="tab" aria-selected="false">Download
                                                                             PDF</a>
                                                                     </div>
@@ -174,7 +178,7 @@
                                                             @if(!@empty($id))
 
                                                                 <a class="btn btn-sm btn-danger float-right m-t-n-xs"
-                                                                   href="{{ route('purchase.index')}}">
+                                                                   href="{{ url('/v2/sales/tax-invoices')}}">
                                                                     cancel
                                                                 </a>
                                                                 <button

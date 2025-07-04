@@ -139,16 +139,8 @@ class SaleDeliveryNoticeController extends Controller
         $saleQuotation = SaleQuotation::with('client')->where('id', $deliveryNotice->order->sale_quotation_id)->first();
         $deliveredItems = DeliveryNoticeItems::where('delivery_notice_id', $deliveryNotice->id)->get();
 
-
-
-//
-//        $saleOrder=SaleOrder::find($id);
-//        $saleQuotation = SaleQuotation::find($saleOrder->sale_quotation_id);
-//        $salePreQuotation = SalePreQuotation::find($saleQuotation->sale_pre_quotation_id);
-//        $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $salePreQuotation->id)->get();
         view()->share([  'deliveryNotice' => $deliveryNotice ,'saleQuotation' => $saleQuotation, 'deliveredItems' => $deliveredItems]);
 
-//        return PDF::loadView('sales.delivery-notice.pdf-view')->setPaper('a4', 'portrait')->download('DELIVERY NOTICE REF NO # ' .  $deliveryNotice->reference_no . ".pdf");
         return PDF::loadView('sales.delivery-notice.pdf-view')->setPaper('a4', 'portrait')->download('DELIVERY NOTICE REF NO # ' .  $deliveryNotice->reference_no . ".pdf");
     }
 
