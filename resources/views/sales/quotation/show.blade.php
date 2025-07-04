@@ -18,7 +18,7 @@
                             Download PDF
                         </a>
 
-                        @if($saleQuotation->paid_amount)
+                        @if(!$saleQuotation->paid_amount)
 
                         <button type="button"
                                 class="btn btn-xs btn-info"
@@ -31,7 +31,6 @@
                             @endif Payment Method
                         </button>
                         @endif
-
 
                         @if($saleQuotation->payment_method && $saleQuotation->paid_amount + $saleQuotation->credibility_amount  <= $saleQuotation->amount)
                             <button type="button"

@@ -17,11 +17,13 @@ class CreateTableDeliveredItems extends Migration
             Schema::create('delivered_items', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedBigInteger('delivery_notice_id');
+                $table->unsignedBigInteger('pivot_item_id');
                 $table->integer('item_id');   // changed from unsignedBigInteger
                 $table->integer('ordered_quantity');
                 $table->integer('delivered_quantity');
                 $table->timestamps();
                 $table->foreign('delivery_notice_id')->references('id')->on('delivery_notices')->onDelete('cascade');
+                $table->foreign('pivot_item_id')->references('id')->on('sale_pre_quotation_item')->onDelete('cascade');
                 $table->foreign('item_id')->references('id')->on('store_pos_items')->onDelete('cascade');
             });
         }

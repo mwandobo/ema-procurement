@@ -234,7 +234,8 @@
                                                                                     <input type="text" name="price[]"
                                                                                            class="form-control item_price{{$i->order_no}}"
                                                                                            placeholder="price" readonly
-                                                                                           value="{{ isset($i) ? $i->price : ''}}"/>
+                                                                                           value="{{ isset($i) ? $i->price : ''}}"
+                                                                                    />
                                                                                 </td>
                                                                                 <td><input type="text" name="unit[]"
                                                                                            class="form-control item_unit{{$i->order_no}}"

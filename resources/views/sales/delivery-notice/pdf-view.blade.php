@@ -165,8 +165,8 @@ $settings = App\Models\Setting::first();
             </td>
             <td class="w-50">
                 <div class="box-text">
-                    <p><strong>Reference: {{$saleQuotation->reference_no}}</strong></p>
-                    <p><strong>Date: {{Carbon\Carbon::parse($saleQuotation->created_at)->format('d/m/Y')}}</strong></p>
+                    <p><strong>Reference: {{$deliveryNotice->reference_no}}</strong></p>
+                    <p><strong>Date: {{Carbon\Carbon::parse($deliveryNotice->created_at)->format('d/m/Y')}}</strong></p>
                 </div>
             </td>
         </tr>
@@ -232,8 +232,8 @@ $i = 1;
         </tr>
         </thead>
         <tbody>
-        @if(!empty($saleQuotationItems))
-            @foreach($saleQuotationItems as $row)
+        @if(!empty($deliveredItems))
+            @foreach($deliveredItems as $row)
                     <?php
                     $item = App\Models\Bar\POS\Items::find($row->item_id);
 

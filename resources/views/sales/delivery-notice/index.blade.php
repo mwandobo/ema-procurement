@@ -30,7 +30,13 @@
                                 <li class="nav-item">
                                     <a class="nav-link @if(!empty($id)) active show @endif" id="profile-tab2"
                                        data-toggle="tab" href="#profile2" role="tab" aria-controls="profile"
-                                       aria-selected="false">New Delivery Notice</a>
+                                       aria-selected="false">
+                                        @if(empty($id))
+                                           Create Delivery Notices
+                                        @else
+                                        Edit Delivery Notices
+                                        @endif
+                                       </a>
                                 </li>
 
                             </ul>
@@ -87,12 +93,11 @@
 
                                                                     <a class="list-icons-item text-primary"
                                                                        title="Edit"
-                                                                       onclick="return confirm('Are you sure?')"
-                                                                       href="{{ route('pre-quotations.edit', $row->id)}}"><i
+                                                                       href="{{ url('v2/sales/deliveries/'.  $row->id .'/edit')}}"><i
                                                                                 class="icon-pencil7"></i></a>&nbsp
 
 
-                                                                    {!! Form::open(['route' => ['pre-quotations.destroy',$row->id],
+                                                                    {!! Form::open(['url' => ['/v2/sales/deliveries', $row->id],
                                                                     'method' => 'delete']) !!}
                                                                     {{ Form::button('<i class="icon-trash"></i>', ['type' => 'submit', 'style' => 'border:none;background: none;', 'class' => 'list-icons-item text-danger', 'title' => 'Delete', 'onclick' => "return confirm('Are you sure?')"]) }}
                                                                     {{ Form::close() }}
@@ -179,78 +184,50 @@
                                                             </tbody>
                                                             <tfoot>
                                                             @if(!empty($id))
-                                                                @if(!empty($items))
-                                                                    @foreach ($items as $i)
+                                                                @if(!empty($deliveryItems))
+                                                                    @foreach ($deliveryItems as $i)
                                                                         <tr class="line_items">
-                                                                            <td><select name="item_name[]"
-                                                                                        class="form-control m-b item_name"
-                                                                                        required
-                                                                                        data-sub_category_id={{$i->order_no}}>
-                                                                                    <option value="">Select Item
-                                                                                        Name
-                                                                                    </option>@foreach($name ?? ''
-                                                                    as $n)
-                                                                                        <option value="{{ $n->id}}"
-                                                                                                @if(isset($i))@if($n->id == $i->item_name)
-                                                                                                    selected @endif @endif >{{$n->name}}</option>
-                                                                                    @endforeach
-                                                                                </select></td>
-                                                                            <td><input type="number"
-                                                                                       name="quantity[]"
-                                                                                       class="form-control item_quantity{{$i->order_no}}"
-                                                                                       placeholder="quantity"
-                                                                                       id="quantity"
-                                                                                       value="{{ isset($i) ? $i->quantity : ''}}"
-                                                                                       required/></td>
-                                                                            <td><input type="text" name="price[]"
-                                                                                       class="form-control item_price{{$i->order_no}}"
-                                                                                       placeholder="price" required
-                                                                                       value="{{ isset($i) ? $i->price : ''}}"/>
-                                                                            </td>
-                                                                            <td><input type="text" name="unit[]"
-                                                                                       class="form-control item_unit{{$i->order_no}}"
-                                                                                       placeholder="unit" disabled
-                                                                                       value="{{ isset($i) ? $i->unit : ''}}"/>
-                                                                                <input type="hidden"
-                                                                                       name="saved_items_id[]"
-                                                                                       class="form-control item_saved{{$i->order_no}}"
-                                                                                       value="{{ isset($i) ? $i->id : ''}}"
-                                                                                       required/>
-                                                                            <td><input type="text"
-                                                                                       name="total_cost[]"
-                                                                                       class="form-control item_total{{$i->order_no}}"
-                                                                                       placeholder="total" required
-                                                                                       value="{{ isset($i) ? $i->total_cost : ''}}"
-                                                                                       readonly
-                                                                                       jAutoCalc="{quantity} * {price}"/>
-                                                                            </td>
-                                                                            <input type="hidden" name="items_id[]"
-                                                                                   class="form-control name_list"
-                                                                                   value="{{ isset($i) ? $i->id : ''}}"/>
+                                                                            <td><p>({{$i->item?->item_code}})
+                                                                                    - {{$i->item?->name}} </p></td>
+                                                                            <td><p> {{$i->item?->cost_price}} </p></td>
+                                                                            <td><p> {{$i->ordered_quantity}} </p></td>
+                                                                            <td><p> {{$i->item->unit}} </p></td>
+                                                                            <td><p> {{$i->salePreQuotationItem?->store->name}} </p></td>
                                                                             <td>
-                                                                                <button type="button" name="remove"
-                                                                                        class="btn btn-danger btn-xs rem"
-                                                                                        value="{{ isset($i) ? $i->id : ''}}">
-                                                                                    <i class="icon-trash"></i>
-                                                                                </button>
+                                                                                <input type="number"
+                                                                                       name="ordered_quantity[]"
+                                                                                       class="form-control"
+                                                                                       value="{{ $i->ordered_quantity }}"
+                                                                                       hidden/>
+                                                                                <input type="number"
+                                                                                       name="delivered_quantity[]"
+                                                                                       class="form-control"
+{{--                                                                                       value="${item.quantity}"--}}
+                                                                                       value="{{ $i->delivered_quantity}}"
+                                                                                       required/>
+                                                                                <input type="number" name="item_ids[]"
+                                                                                       class="form-control"
+                                                                                       value="{{ $i->item->id }}"
+                                                                                       hidden/>
+                                                                                <input type="number" name="pivot_item_ids[]"
+                                                                                       class="form-control"
+                                                                                       value="{{ $i->salePreQuotationItem->id }}"
+                                                                                       hidden/>
                                                                             </td>
                                                                         </tr>
-
                                                                     @endforeach
                                                                 @endif
                                                             @endif
                                                             </tfoot>
                                                         </table>
                                                     </div>
-
-
                                                     <br>
                                                     <div class="form-group row">
                                                         <div class="col-lg-offset-2 col-lg-12">
                                                             @if(!@empty($id))
 
                                                                 <a class="btn btn-sm btn-danger float-right m-t-n-xs"
-                                                                   href="{{ route('purchase.index')}}">
+                                                                   href="{{ url('v2/sales/deliveries')}}">
                                                                     cancel
                                                                 </a>
                                                                 <button
@@ -327,22 +304,16 @@
                         console.log(data);
                         $('.item_price' + sub_category_id).val(data[0]["cost_price"]);
                         $(".item_unit" + sub_category_id).val(data[0]["unit"]);
-
                     }
-
                 });
-
             });
-
-
         });
     </script>
-
-
 
     <script type="text/javascript">
         $(document).ready(function () {
             var count = 0;
+
             function autoCalcSetup() {
                 $('table#cart').jAutoCalc('destroy');
                 $('table#cart tr.line_items').jAutoCalc({
@@ -374,11 +345,15 @@
                     <tr class="line_items">
                         <td>  <p> ${item.name} <p/></td>
                         <td>  <p> ${item.price} <p/></td>
-                        <td>  <input type="number" name="ordered_quantity[]" class="form-control" value="${item.quantity}" readonly /></td>
+                        <td>  <p> ${item.quantity} <p/></td>
                         <td>  <p> ${item.unit} <p/></td>
                         <td>  <p> ${item.store} <p/></td>
-                        <td><input type="number" name="delivered_quantity[]" class="form-control" value="${item.quantity}" required /></td>
-                        <td><input type="number" name="item_ids[]" class="form-control" value="${item.id}" hidden /></td>
+                        <td>
+                            <input type="number" name="delivered_quantity[]" class="form-control" value="${item.quantity}" required />
+                            <input type="number" name="ordered_quantity[]" class="form-control" value="${item.quantity}" hidden />
+                            <input type="number" name="item_ids[]" class="form-control" value="${item.id}" hidden />
+                            <input type="number" name="pivot_item_ids[]" class="form-control" value="${item.pivot_id}" hidden />
+                        </td>
                     </tr>
                 `;
                             tbody.append(row);
@@ -393,14 +368,10 @@
                 });
             });
 
-
-
-
             $(document).on('click', '.remove', function () {
                 $(this).closest('tr').remove();
                 autoCalcSetup();
             });
-
 
             $(document).on('click', '.rem', function () {
                 var btn_value = $(this).attr("value");
@@ -410,9 +381,7 @@
                     btn_value + '"/>');
                 autoCalcSetup();
             });
-
         });
     </script>
-
 
 @endsection

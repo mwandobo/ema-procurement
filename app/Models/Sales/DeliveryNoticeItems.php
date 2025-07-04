@@ -30,6 +30,12 @@ class DeliveryNoticeItems extends Model
         return $this->belongsTo(Items::class, 'item_id');
     }
 
+    public function salePreQuotationItem()
+    {
+        return $this->belongsTo(SalePreQuotationItem::class, 'pivot_item_id');
+    }
+
+
     public function delivery_notice()
     {
         return $this->belongsTo(DeliveryNotice::class, 'delivery_notice_id');

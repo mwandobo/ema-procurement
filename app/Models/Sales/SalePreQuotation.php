@@ -32,7 +32,7 @@ class SalePreQuotation extends Model
             'sale_pre_quotation_id',      // Foreign key to this model
             'item_id'                     // Foreign key to Items model (corrected from items_id)
         )
-            ->withPivot('store_id', 'quantity', 'price', 'unit')
+            ->withPivot('store_id', 'quantity', 'price', 'unit', 'id')
             ->withTimestamps();
     }
 }

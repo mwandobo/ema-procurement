@@ -35,7 +35,7 @@ class SaleOrderController extends Controller
         $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $salePreQuotation->id)->get();
         view()->share(['saleQuotation' => $saleQuotation, 'saleQuotationItems' => $saleQuotationItems]);
 
-        return PDF::loadView('sales.order.pdf-view')->setPaper('a4', 'portrait')->download('SALE QUOTATION REF NO # ' .  $saleQuotation->reference_no . ".pdf");
+        return PDF::loadView('sales.order.pdf-view')->setPaper('a4', 'portrait')->download('SALE ORDER REF NO # ' .  $saleOrder->reference_no . ".pdf");
     }
 
     public function fetchItemsByOrder($orderId)
@@ -55,9 +55,9 @@ class SaleOrderController extends Controller
                 'price' => $item->cost_price ?? 0,
                 'unit' => $item->unit ?? '',
                 'store' => $store->name ?? 'N/A',
+                'pivot_id' => $item->pivot->id,
             ];
         });
-
         return response()->json(['items' => $items ]);
     }
 }
