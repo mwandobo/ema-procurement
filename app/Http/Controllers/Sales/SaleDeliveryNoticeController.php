@@ -71,7 +71,7 @@ class SaleDeliveryNoticeController extends Controller
         $saleQuotation = SaleQuotation::with('client')->where('id', $deliveryNotice->order->sale_quotation_id)->first();
         $deliveredItems = DeliveryNoticeItems::where('delivery_notice_id',
             $deliveryNotice->id)->get();
-        return view('sales.delivery-notice.show', compact('deliveryNotice', 'deliveredItems', 'saleQuotation'));
+        return view('sales.delivery-notice.show', compact(['deliveryNotice', 'deliveredItems', 'saleQuotation']));
     }
 
     public function edit($id)
@@ -137,8 +137,7 @@ class SaleDeliveryNoticeController extends Controller
         }
 
         $saleQuotation = SaleQuotation::with('client')->where('id', $deliveryNotice->order->sale_quotation_id)->first();
-        $deliveredItems = DeliveryNoticeItems::where('delivery_notice_id',
-            $deliveryNotice->id)->get();
+        $deliveredItems = DeliveryNoticeItems::where('delivery_notice_id', $deliveryNotice->id)->get();
 
 
 
@@ -147,9 +146,10 @@ class SaleDeliveryNoticeController extends Controller
 //        $saleQuotation = SaleQuotation::find($saleOrder->sale_quotation_id);
 //        $salePreQuotation = SalePreQuotation::find($saleQuotation->sale_pre_quotation_id);
 //        $saleQuotationItems = SalePreQuotationItem::with('store')->where('sale_pre_quotation_id', $salePreQuotation->id)->get();
-        view()->share([  'deliveryNotice' ,'saleQuotation', 'deliveredItems']);
+        view()->share([  'deliveryNotice' => $deliveryNotice ,'saleQuotation' => $saleQuotation, 'deliveredItems' => $deliveredItems]);
 
-        return PDF::loadView('sales.delivery-notice.pdf-view')->setPaper('a4', 'portrait')->download('SALE ORDER REF NO # ' .  $saleOrder->reference_no . ".pdf");
+//        return PDF::loadView('sales.delivery-notice.pdf-view')->setPaper('a4', 'portrait')->download('DELIVERY NOTICE REF NO # ' .  $deliveryNotice->reference_no . ".pdf");
+        return PDF::loadView('sales.delivery-notice.pdf-view')->setPaper('a4', 'portrait')->download('DELIVERY NOTICE REF NO # ' .  $deliveryNotice->reference_no . ".pdf");
     }
 
 

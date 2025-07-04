@@ -222,13 +222,10 @@ $i = 1;
         <thead>
         <tr>
             <th class="col-sm-1 w-50">#</th>
-            <th class=" col-sm-2 w-50">Items</th>
-            <th class="w-50">Price</th>
-            <th class="w-50">Discounted Price</th>
-            <th class="w-50">Store</th>
-            <th class="w-50">Qty</th>
+            <th class="w-50">Items</th>
+            <th class="w-50">Ordered Quantity</th>
+            <th class="w-50">Delivered Quantity<</th>
             <th class="w-50">Unit</th>
-            <th class="w-50">Amount</th>
         </tr>
         </thead>
         <tbody>
@@ -236,34 +233,15 @@ $i = 1;
             @foreach($deliveredItems as $row)
                     <?php
                     $item = App\Models\Bar\POS\Items::find($row->item_id);
-
-                    $amount = $item->cost_price * $row->quantity ;
-                    $cost_price = $row->cost_price;
-                    $discount = 0;
-                    $sub_total += $row->total_cost;
-                    $gland_total += $row->total_cost + $row->total_tax;
-                    $tax += $row->total_tax;
-
-                    $discountRule = App\Models\Bar\POS\Discount::where('item_id', $row->item_id)
-                        ->where('min_quantity', '<=', $row->quantity)
-                        ->where('max_quantity', '>=', $row->quantity)
-                        ->first();
-                    if ($discountRule) {
-                        $amount = ($amount *( 100 - $discountRule->value)) / 100;
-                        $cost_price = ($item->cost_price * (100 -$discountRule->value)) / 100;
-                    }
                     ?>
 
                 <tr align="center">
                     <td>{{$i++}}</td>
                     <td class=""><strong
                             class="block">{{ $item->item_code ? "( $item->item_code) - " : '' }}{{ $item->name }}</strong></td>
-                    <td>{{number_format($row->cost_price ,2)}}</td>
-                    <td>{{number_format($cost_price ,2)}}</td>
-                    <td>{{ $row->store?->name }}</td>
-                    <td>{{ $row->quantity}}</td>
-                    <td>{{ $row->unit}}</td>
-                    <td>{{number_format($amount ,2)}} TZS</td>
+                    <td>{{ $row->ordered_quantity }}</td>
+                    <td>{{ $row->delivered_quantity}}</td>
+                    <td>{{ $item->unit}}</td>
                 </tr>
             @endforeach
         @endif
